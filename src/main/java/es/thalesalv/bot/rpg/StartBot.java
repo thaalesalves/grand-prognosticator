@@ -55,7 +55,7 @@ public class StartBot extends ListenerAdapter {
 
             if (!author.isBot()) {
                 Watson.buildSession();
-                String watsonReply = Watson.sendMessage(rawContent);
+                String watsonReply = Watson.sendMessage(rawContent.replaceAll("\n", " <<LINE BREAK>> ").trim());
                 Watson.closeSession();
 
                 if (event.isFromType(ChannelType.TEXT)) {

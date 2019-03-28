@@ -10,4 +10,7 @@ public class JBotConfig {
 	
 	public static final String WATSON_API_KEY = JBotUtils.fetchBotProperties().getProperty("watson.apikey");
 	public static final String WATSON_ASSISTANT_ID = JBotUtils.fetchBotProperties().getProperty("watson.assistantid");
+	
+	public static final String FOOTER_TEXT = "The Grand Prognosticator. By the Word of Seht, I am bound.";
+	public static final String FOOTER_IMG = "http://img1.wikia.nocookie.net/__cb20120612190227/elderscrolls/images/f/f7/TESOnlineIcon.png";
 }

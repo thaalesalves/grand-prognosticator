@@ -6,9 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.thalesalv.bot.rpg.functions.DiceRoll;
+import es.thalesalv.bot.rpg.functions.Function;
+import es.thalesalv.bot.rpg.functions.WatsonMessage;
 import es.thalesalv.bot.rpg.util.JBotConfig;
 import es.thalesalv.bot.rpg.util.Watson;
 import net.dv8tion.jda.core.AccountType;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.ChannelType;
@@ -29,10 +32,8 @@ public class StartBot extends ListenerAdapter {
     private List<User> mentions;
     private String content;
     private String rawContent;
-    private String cmd;
-    private String param;
-    private String op;
-    private static final Logger LOGGER = LoggerFactory.getLogger(StartBot.class.getName());
+    private Function function;
+    private static final Logger LOGGER = LoggerFactory.getLogger(StartBot.class);
 
     public static void main(String[] args) throws Exception {
         JDA jda = new JDABuilder(AccountType.BOT).setToken(JBotConfig.BOT_TOKEN).build();
@@ -49,9 +50,8 @@ public class StartBot extends ListenerAdapter {
             mentions = message.getMentionedUsers();
             content = message.getContentDisplay();
             rawContent = message.getContentRaw();
-            cmd = content.split("\\s+")[0];
-            param = content.replace(cmd + " ", "");
-            System.out.printf("[%s][%s] %#s: %s%n", guild.getName(), channel.getName(), author, content);
+            EmbedBuilder builder = new EmbedBuilder();
+            LOGGER.info("[" + guild.getName() + "] " + author.getName() + " disse em " + channel.getName() + ": " + content);
 
             if (!author.isBot()) {
                 Watson.buildSession();
@@ -65,19 +65,19 @@ public class StartBot extends ListenerAdapter {
                         Boolean anotherCommand = false;
 
                         /* Funções do Bot */
-                        if (commands[1].equals("rola") || commands[1].equals("roll")) {
+                        if (commands[1].equals("rola")) {
+                            function = new DiceRoll();
                             String[] dicesToRoll = commands[2].split("d");
-                            int dice = Integer.parseInt(dicesToRoll[1]);
-                            int diceQty = Integer.parseInt(dicesToRoll[0]);
-                            String diceRolls = String.join(", ", DiceRoll.rollDice(diceQty, dice));
-                            channel.sendMessage(diceRolls).complete();
+                            builder = function.buildMessage(dicesToRoll[0], dicesToRoll[1], author.getAsMention(), author.getName());
                             anotherCommand = true;
                         }
 
                         if (!anotherCommand && watsonReply != null) {
-                            channel.sendMessage(watsonReply).complete();
+                            function = new WatsonMessage();
+                            builder = function.buildMessage(watsonReply);
                         }
 
+                        channel.sendMessage(builder.build()).complete();
                     }
                 }
             }

@@ -18,53 +18,56 @@ import com.ibm.watson.developer_cloud.service.security.IamOptions;
 
 public class Watson {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Watson.class.getName());
-	private static Assistant service;
-	private static String sessionId;
+    private static final Logger LOGGER = LoggerFactory.getLogger(Watson.class);
+    private static Assistant service;
+    private static String sessionId;
 
-	public static String sendMessage(String message) throws Exception {
-		try {
-			MessageInput input = new MessageInput.Builder().text(message).build();
-			MessageOptions messageOptions = new MessageOptions.Builder(JBotConfig.WATSON_ASSISTANT_ID, sessionId)
-			        .input(input).build();
-			MessageResponse response = service.message(messageOptions).execute();
+    public static String sendMessage(String message) throws Exception {
+        try {
+            MessageInput input = new MessageInput.Builder().text(message).build();
+            MessageOptions messageOptions = new MessageOptions.Builder(JBotConfig.WATSON_ASSISTANT_ID, sessionId)
+                    .input(input).build();
+            MessageResponse response = service.message(messageOptions).execute();
+            LOGGER.info("Mensagem recebida pelo Watson. Verificando contexto.");
 
-			List<DialogRuntimeResponseGeneric> responseGeneric = response.getOutput().getGeneric();
-			if (responseGeneric.size() > 0) {
-				return response.getOutput().getGeneric().get(0).getText();
-			}
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			throw e;
-		}
+            DialogRuntimeResponseGeneric watsonResponse;
+            List<DialogRuntimeResponseGeneric> responseGeneric = response.getOutput().getGeneric();
+            if ((watsonResponse = responseGeneric.get(0)) != null) {
+                LOGGER.info("Contexto reconhecido. Enviando resposta do Watson.");
+                return watsonResponse.getText();
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            throw e;
+        }
 
-		closeSession();
-		return null;
-	}
+        LOGGER.info("Contexto da mensagem não reconhecido. Nenhum intent relacionado ao conteúdo.");
+        return null;
+    }
 
-	public static void buildSession() throws Exception {
-		try {
-			LogManager.getLogManager().reset();
-			IamOptions iamOptions = new IamOptions.Builder().apiKey(JBotConfig.WATSON_API_KEY).build();
-			service = new Assistant("2018-09-20", iamOptions);
-			CreateSessionOptions createSessionOptions = new CreateSessionOptions.Builder(JBotConfig.WATSON_ASSISTANT_ID)
-			        .build();
-			SessionResponse session = service.createSession(createSessionOptions).execute();
-			sessionId = session.getSessionId();
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			throw e;
-		}
-	}
+    public static void buildSession() throws Exception {
+        try {
+            LogManager.getLogManager().reset();
+            IamOptions iamOptions = new IamOptions.Builder().apiKey(JBotConfig.WATSON_API_KEY).build();
+            service = new Assistant("2018-09-20", iamOptions);
+            CreateSessionOptions createSessionOptions = new CreateSessionOptions.Builder(JBotConfig.WATSON_ASSISTANT_ID)
+                    .build();
+            SessionResponse session = service.createSession(createSessionOptions).execute();
+            sessionId = session.getSessionId();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            throw e;
+        }
+    }
 
-	public static void closeSession() {
-		try {
-			DeleteSessionOptions deleteSessionOptions = new DeleteSessionOptions.Builder(JBotConfig.WATSON_ASSISTANT_ID,
-			        sessionId).build();
-			service.deleteSession(deleteSessionOptions).execute();
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			throw e;
-		}
-	}
+    public static void closeSession() {
+        try {
+            DeleteSessionOptions deleteSessionOptions = new DeleteSessionOptions.Builder(JBotConfig.WATSON_ASSISTANT_ID,
+                    sessionId).build();
+            service.deleteSession(deleteSessionOptions).execute();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            throw e;
+        }
+    }
 }

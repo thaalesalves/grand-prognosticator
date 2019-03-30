@@ -1,5 +1,5 @@
 # Grand Prognosticator
-O Grand Prognosticator é um bot de Discord inspirado no [personagem de mesmo nome](https://en.uesp.net/wiki/Online:Grand_Prognosticator) de Elder Scrolls Online. O propósito do bot é automatizar jogos de RPG online (RPGs de mesa e não eletrônicos), com ferramentas como criação de ficha e rolagem de dados. Além, claro, de ferramentas que outros bots fornecem: administração do servidor, logging, música e afins. 
+O Grand Prognosticator é um bot de Discord inspirado no [personagem de mesmo nome](https://en.uesp.net/wiki/Online:The_Grand_Prognosticator) de Elder Scrolls Online. O propósito do bot é automatizar jogos de RPG online (RPGs de mesa e não eletrônicos), com ferramentas como criação de ficha e rolagem de dados. Além, claro, de ferramentas que outros bots fornecem: administração do servidor, logging, música e afins. 
 
 ## Objetivos Principais
 O Grand Prognosticator é integrado com o IBM Watson para machine-learning. Um dos objetivos deste bot é usá-lo como referência para a lore dos universos de Elder Scrolls e World of Darkness, alimentando-o com informações sobre os mesmos e treinando-o para assimilar contextos para perguntas e respostas.

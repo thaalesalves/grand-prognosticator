@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
-import es.thalesalv.bot.rpg.util.JBotConfig;
+import es.thalesalv.bot.rpg.util.GrandPrognosticator;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -23,8 +23,8 @@ public class BotStarter {
 
         SpringApplication.run(BotStarter.class, args);
         JDA jda = new JDABuilder(AccountType.BOT)
-                .setToken(JBotConfig.BOT_TOKEN)
-                .setGame(Game.watching(JBotConfig.GAME_PLAYING))
+                .setToken(GrandPrognosticator.BOT_TOKEN)
+                .setGame(Game.watching(GrandPrognosticator.GAME_PLAYING))
                 .build();
         jda.addEventListener(botListeners);
     }

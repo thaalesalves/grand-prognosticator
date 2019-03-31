@@ -6,12 +6,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.thalesalv.bot.rpg.functions.DiceRoll;
 import es.thalesalv.bot.rpg.functions.Function;
-import es.thalesalv.bot.rpg.functions.Music;
-import es.thalesalv.bot.rpg.functions.WatsonMessage;
-import es.thalesalv.bot.rpg.util.JBotConfig;
-import es.thalesalv.bot.rpg.util.JBotUtils;
+import es.thalesalv.bot.rpg.functions.audio.Music;
+import es.thalesalv.bot.rpg.functions.text.DiceRoll;
+import es.thalesalv.bot.rpg.functions.text.WatsonMessage;
+import es.thalesalv.bot.rpg.util.GrandPrognosticator;
 import es.thalesalv.bot.rpg.util.Watson;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.ChannelType;
@@ -56,12 +55,14 @@ public class BotChat extends ListenerAdapter {
                 String watsonReply = Watson.sendMessage(rawContent.replaceAll("\n", "    LINE BREAK    ").trim());
                 Watson.closeSession();
                 String[] commands = rawContent.replaceAll("\\p{Punct}", "").split(" ");
+                String[] rawCommands = rawContent.split(" ");
                 String firstWord = rawContent.split(" ")[0];
 
                 if (event.isFromType(ChannelType.TEXT)) {
-                    thisBot = event.getGuild().getMemberById(JBotConfig.BOT_ID).getUser();
-                    if (mentions.contains(thisBot) || firstWord.equals(JBotConfig.BOT_OPERATOR)) {
+                    thisBot = event.getGuild().getMemberById(GrandPrognosticator.BOT_ID).getUser();
+                    if (mentions.contains(thisBot) || firstWord.equals(GrandPrognosticator.BOT_OPERATOR)) {
                         Boolean anotherCommand = false;
+                        Boolean shouldSend = true;
 
                         /* Funções do Bot */
                         if (commands[1].equals("role")) {
@@ -74,21 +75,24 @@ public class BotChat extends ListenerAdapter {
 
                         if (commands[1].equals("audio")) {
                             function = new Music(event);
-                            String[] musicCommands = ArrayUtils.remove(commands, 0);
+                            String[] musicCommands = ArrayUtils.remove(rawCommands, 0);
                             musicCommands = ArrayUtils.remove(musicCommands, 0);
                             builder = function.buildMessage(musicCommands);
                             anotherCommand = true;
+
+                            if (builder.getDescriptionBuilder().toString().isEmpty())
+                                shouldSend = false;
                         }
 
                         if (commands[1].equals("morra")) {
-                            builder = JBotUtils.buildBuilder(builder);
+                            builder = GrandPrognosticator.buildBuilder(builder);
                             builder.setTitle("Refletindo... processando...");
 
-                            if (JBotUtils.isAdmin(memberAuthor)) {
+                            if (GrandPrognosticator.isAdmin(memberAuthor)) {
                                 builder.setDescription("Pela palavra de Seht, sou compelido. Desativando.");
                                 channel.sendMessage(builder.build()).complete();
                                 LOGGER.warn(author.getName() + " desativou o bot. Fechando aplicação.");
-                                JBotUtils.die(guild.getJDA());
+                                GrandPrognosticator.die(guild.getJDA());
                             }
 
                             builder.setDescription(
@@ -101,7 +105,8 @@ public class BotChat extends ListenerAdapter {
                             builder = function.buildMessage(watsonReply);
                         }
 
-                        channel.sendMessage(builder.build()).complete();
+                        if (shouldSend)
+                            channel.sendMessage(builder.build()).complete();
                     }
                 }
             }

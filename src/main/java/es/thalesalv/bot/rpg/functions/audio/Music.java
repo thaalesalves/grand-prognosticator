@@ -1,9 +1,18 @@
-package es.thalesalv.bot.rpg.functions;
+package es.thalesalv.bot.rpg.functions.audio;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.validator.routines.UrlValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.thalesalv.bot.rpg.util.JBotUtils;
+import es.thalesalv.bot.rpg.functions.Function;
+import es.thalesalv.bot.rpg.model.YouTubeVideo;
+import es.thalesalv.bot.rpg.util.GrandPrognosticator;
+import es.thalesalv.bot.rpg.util.YouTube;
+import es.thalesalv.bot.rpg.util.lavaplayer.GuildMusicManager;
+import es.thalesalv.bot.rpg.util.lavaplayer.PlayerManager;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
@@ -36,9 +45,9 @@ public class Music extends Function {
         this.state = member.getVoiceState();
         this.bot = guild.getSelfMember();
         this.channel = state.getChannel();
-        this.manager = guild.getAudioManager();
         this.textChannel = event.getTextChannel();
-        builder = JBotUtils.buildBuilder(new EmbedBuilder());
+        this.manager = guild.getAudioManager();
+        builder = GrandPrognosticator.buildBuilder(new EmbedBuilder());
         builder.setTitle("Refletindo... processando... iniciando processos sonoros...");
     }
 
@@ -67,7 +76,10 @@ public class Music extends Function {
     }
 
     private Boolean isAble() {
-        if (isConnected()) {
+        VoiceChannel botChannel = bot.getVoiceState().getChannel();
+        String userChannelId = channel.getId();
+
+        if (isConnected() && !userChannelId.equals(botChannel.getId())) {
             errorMessage = "Pela palavra de Seht, já estou conectado em uma sala. Aguarde minha disponibilidade.";
             return false;
         }
@@ -90,7 +102,10 @@ public class Music extends Function {
     public EmbedBuilder buildMessage(String... strings) throws Exception {
         try {
             String command = strings[0];
-            builder = JBotUtils.buildBuilder(builder);
+            builder = GrandPrognosticator.buildBuilder(builder);
+            PlayerManager playerManager = PlayerManager.getInstance();
+            GuildMusicManager musicManager = playerManager.getGuildMusicManager(guild);
+
             switch (command) {
                 case "toque":
                     if (!isAble()) {
@@ -98,7 +113,20 @@ public class Music extends Function {
                         return builder;
                     }
 
+                    String songUrl = strings[1];
+                    UrlValidator urlValidator = new UrlValidator(new String[] {
+                        "http",
+                        "https"
+                    }, UrlValidator.ALLOW_ALL_SCHEMES);
+
+                    if (!urlValidator.isValid(songUrl)) {
+                        builder.setDescription("Pela palavra de Seht, me foi fornecida uma URL inválida.");
+                        return builder;
+                    }
+
                     joinChannel();
+                    playerManager.loadAndPlay(textChannel, songUrl);
+                    musicManager.player.setVolume(GrandPrognosticator.BOT_AUDIO_VOLUME);
                     break;
 
                 case "conecte":
@@ -109,6 +137,35 @@ public class Music extends Function {
 
                     builder.setDescription("Pela palavra de Seht, sou compelido. Entrando em #" + channel.getName());
                     joinChannel();
+                    break;
+
+                case "proximo":
+                    musicManager.scheduler.nextTrack();
+                    builder.setDescription("Pela palavra de Seht, sou compelido. Avançando para próxima canção.");
+                    break;
+
+                case "pare":
+                    musicManager.scheduler.clearQueue();
+                    musicManager.player.stopTrack();
+                    musicManager.player.setPaused(false);
+                    builder.setDescription("Pela palavra de Seht, sou compelido. Cancelando execução musical.");
+                    leaveChannel();
+                    break;
+
+                case "lista":
+                    List<String> videos = new ArrayList<String>();
+                    new Object() {
+                        int runCount = 0;
+                        {
+                            musicManager.scheduler.getQueue().stream().peek(x -> runCount++).forEach(track -> {
+                                YouTubeVideo video = YouTube.get(track.getInfo().uri);
+                                videos.add("**" + runCount + ".** " + video.getTitle() + " de **" + video.getCreator() + "**;");
+                            });
+                        }
+                    };
+
+                    builder.setTitle("Refletindo... processando... listando fila musical");
+                    builder.setDescription(String.join("\n", videos));
                     break;
 
                 case "saia":

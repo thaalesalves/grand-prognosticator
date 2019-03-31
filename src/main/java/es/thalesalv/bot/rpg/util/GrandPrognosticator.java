@@ -19,14 +19,37 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 
-public class JBotUtils {
+public class GrandPrognosticator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JBotConfig.class);
+    public static final Integer BOT_AUDIO_VOLUME = Integer
+            .parseInt(GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.volume"));
+    public static final String GAME_PLAYING = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.game.playing");
+    public static final String BOT_OPERATOR = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.operator");
+    public static final String BOT_TOKEN = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.token");
+    public static final String BOT_ID = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.id");
+    public static final String BOT_SECRET = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.secret");
+    public static final String WATSON_API_KEY = GrandPrognosticator.fetchBotProperties().getProperty("watson.apikey");
+    public static final String WATSON_ASSISTANT_ID = GrandPrognosticator.fetchBotProperties().getProperty("watson.assistantid");
+    public static final String FOOTER_TEXT = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.footer.text");
+    public static final String FOOTER_IMG = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.footer.image");
+    public static final String DISCORD_GUILD_ID = GrandPrognosticator.fetchBotProperties().getProperty("discord.guild.id");
+    public static final String DISCORD_LOG_CHANNEL_ID = GrandPrognosticator.fetchBotProperties()
+            .getProperty("discord.guild.log.channel.id");
+    public static final String YOUTUBE_API_URL = "https://www.googleapis.com/youtube/v3/videos?id=VIDEOID&key=APIKEY&part=PART";
+    public static final String YOUTUBE_KEY = GrandPrognosticator.fetchBotProperties().getProperty("youtube.api.key");
+    public static final String[] YOUTUBE_PART = {
+        "snippet",
+        "contentDetails",
+        "statistics",
+        "status"
+    };
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GrandPrognosticator.class);
 
     public static Boolean isAdmin(Member member) {
         return member.hasPermission(Permission.ADMINISTRATOR);
     }
-    
+
     public static void die(JDA jda) {
         jda.shutdown();
         System.exit(0);
@@ -53,7 +76,7 @@ public class JBotUtils {
     public static EmbedBuilder buildBuilder(EmbedBuilder builder) throws Exception {
         try {
             builder.setColor(Color.YELLOW);
-            builder.setFooter(JBotConfig.FOOTER_TEXT, JBotConfig.FOOTER_IMG);
+            builder.setFooter(GrandPrognosticator.FOOTER_TEXT, GrandPrognosticator.FOOTER_IMG);
             return builder;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());

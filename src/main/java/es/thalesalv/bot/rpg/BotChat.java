@@ -2,12 +2,17 @@ package es.thalesalv.bot.rpg;
 
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.thalesalv.bot.rpg.functions.Function;
-import es.thalesalv.bot.rpg.functions.audio.Music;
+import es.thalesalv.bot.rpg.functions.AudioFunction;
+import es.thalesalv.bot.rpg.functions.TextFunction;
+import es.thalesalv.bot.rpg.functions.audio.ChannelJoin;
+import es.thalesalv.bot.rpg.functions.audio.ChannelLeave;
+import es.thalesalv.bot.rpg.functions.audio.MusicPlay;
+import es.thalesalv.bot.rpg.functions.audio.MusicQueue;
+import es.thalesalv.bot.rpg.functions.audio.MusicSkip;
+import es.thalesalv.bot.rpg.functions.audio.MusicStop;
 import es.thalesalv.bot.rpg.functions.text.DiceRoll;
 import es.thalesalv.bot.rpg.functions.text.WatsonMessage;
 import es.thalesalv.bot.rpg.util.GrandPrognosticator;
@@ -33,7 +38,8 @@ public class BotChat extends ListenerAdapter {
     private List<User> mentions;
     private String content;
     private String rawContent;
-    private Function function;
+    private TextFunction tfunction;
+    private AudioFunction afunction;
     private static final Logger LOGGER = LoggerFactory.getLogger(BotChat.class);
 
     @Override
@@ -63,28 +69,66 @@ public class BotChat extends ListenerAdapter {
                     if (mentions.contains(thisBot) || firstWord.equals(GrandPrognosticator.BOT_OPERATOR)) {
                         Boolean anotherCommand = false;
                         Boolean shouldSend = true;
+                        String command = commands[1];
 
                         /* Funções do Bot */
-                        if (commands[1].equals("role")) {
-                            function = new DiceRoll();
-                            String[] dicesToRoll = commands[2].split("d");
-                            builder = function.buildMessage(dicesToRoll[0], dicesToRoll[1], author.getAsMention(),
+                        if (command.equals("role")) {
+                            String arg = commands[2];
+                            tfunction = new DiceRoll();
+                            String[] dicesToRoll = arg.split("d");
+                            builder = tfunction.buildMessage(dicesToRoll[0], dicesToRoll[1], author.getAsMention(),
                                     author.getName());
                             anotherCommand = true;
                         }
 
-                        if (commands[1].equals("audio")) {
-                            function = new Music(event);
-                            String[] musicCommands = ArrayUtils.remove(rawCommands, 0);
-                            musicCommands = ArrayUtils.remove(musicCommands, 0);
-                            builder = function.buildMessage(musicCommands);
-                            anotherCommand = true;
-
-                            if (builder.getDescriptionBuilder().toString().isEmpty())
+                        if (command.equals("audio")) {
+                            String arg = commands[2];
+                            
+                            if (arg.equals("toque")) {
+                                afunction = new MusicPlay();
+                                afunction.setUp(event);
+                                builder = afunction.execute(rawCommands);
                                 shouldSend = false;
+                                anotherCommand = true;
+                            }
+
+                            if (arg.equals("entre")) {
+                                afunction = new ChannelJoin();
+                                afunction.setUp(event);
+                                builder = afunction.execute(rawCommands);
+                                anotherCommand = true;
+                            }
+
+                            if (arg.equals("proximo")) {
+                                afunction = new MusicSkip();
+                                afunction.setUp(event);
+                                builder = afunction.execute(rawCommands);
+                                anotherCommand = true;
+                            }
+                            
+                            if (arg.equals("pare")) {
+                                afunction = new MusicStop();
+                                afunction.setUp(event);
+                                builder = afunction.execute(rawCommands);
+                                anotherCommand = true;
+                            }
+                            
+                            if (arg.equals("lista")) {
+                                afunction = new MusicQueue();
+                                afunction.setUp(event);
+                                builder = afunction.execute(rawCommands);
+                                anotherCommand = true;
+                            }
+                            
+                            if (arg.equals("saia")) {
+                                afunction = new ChannelLeave();
+                                afunction.setUp(event);
+                                builder = afunction.execute(rawCommands);
+                                anotherCommand = true;
+                            }
                         }
 
-                        if (commands[1].equals("morra")) {
+                        if (command.equals("morra")) {
                             builder = GrandPrognosticator.buildBuilder(builder);
                             builder.setTitle("Refletindo... processando...");
 
@@ -101,8 +145,8 @@ public class BotChat extends ListenerAdapter {
                         }
 
                         if (!anotherCommand && watsonReply != null) {
-                            function = new WatsonMessage();
-                            builder = function.buildMessage(watsonReply);
+                            tfunction = new WatsonMessage();
+                            builder = tfunction.buildMessage(watsonReply);
                         }
 
                         if (shouldSend)

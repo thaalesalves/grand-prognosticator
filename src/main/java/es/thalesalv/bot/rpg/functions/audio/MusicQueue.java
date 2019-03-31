@@ -2,9 +2,12 @@ package es.thalesalv.bot.rpg.functions.audio;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import es.thalesalv.bot.rpg.functions.AudioFunction;
 import es.thalesalv.bot.rpg.model.YouTubeVideo;
@@ -31,15 +34,22 @@ public class MusicQueue implements AudioFunction {
             new Object() {
                 int runCount = 0;
                 {
-                    musicManager.scheduler.getQueue().stream().peek(x -> runCount++).forEach(track -> {
-                        YouTubeVideo video = YouTube.get(track.getInfo().uri);
-                        videos.add("**" + runCount + ".** " + video.getTitle() + " de **" + video.getCreator() + "**;");
-                    });
+                    BlockingQueue<AudioTrack> queue = musicManager.scheduler.getQueue();
+
+                    if (queue.size() > 0) {
+                        queue.stream().peek(x -> runCount++).forEach(track -> {
+                            YouTubeVideo video = YouTube.get(track.getInfo().uri);
+                            videos.add("**" + runCount + ".** " + video.getTitle() + " de **" + video.getCreator() + "**;");
+                        });
+
+                        builder.setDescription(String.join("\n", videos));
+                    } else {
+                        builder.setDescription("Pela palavra de Seht, a fila musical está vazia.");
+                    }
                 }
             };
 
             builder.setTitle("Refletindo... processando... listando fila musical");
-            builder.setDescription(String.join("\n", videos));
             return builder;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());

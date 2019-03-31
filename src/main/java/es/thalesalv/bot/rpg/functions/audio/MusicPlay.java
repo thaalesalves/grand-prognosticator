@@ -5,7 +5,7 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.thalesalv.bot.rpg.functions.AudioFunction;
+import es.thalesalv.bot.rpg.functions.GenericFunction;
 import es.thalesalv.bot.rpg.util.GrandPrognosticator;
 import es.thalesalv.bot.rpg.util.lavaplayer.GuildMusicManager;
 import es.thalesalv.bot.rpg.util.lavaplayer.PlayerManager;
@@ -19,7 +19,7 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AudioManager;
 
-public class MusicPlay implements AudioFunction {
+public class MusicPlay implements GenericFunction {
 
     private Member bot;
     private Member member;
@@ -34,9 +34,13 @@ public class MusicPlay implements AudioFunction {
     private static final Logger LOGGER = LoggerFactory.getLogger(MusicPlay.class);
 
     private Boolean isAble() {
+        if (!GrandPrognosticator.isUserInVoiceChannel(state)) {
+            errorMessage = "Pela palavra de Seht, sou compelido. Conecte-se a uma sala de áudio e tente novamente.";
+            return false;
+        }
+
         VoiceChannel botChannel = bot.getVoiceState().getChannel();
         String userChannelId = channel.getId();
-
         if (GrandPrognosticator.isConnected(manager) && !userChannelId.equals(botChannel.getId())) {
             errorMessage = "Pela palavra de Seht, já estou conectado em uma sala. Aguarde minha disponibilidade.";
             return false;
@@ -45,11 +49,6 @@ public class MusicPlay implements AudioFunction {
         if (!GrandPrognosticator.canConnect(channel, bot) || !GrandPrognosticator.canSpeak(channel, bot)) {
             errorMessage = "Pela palavra de Seht, não tenho privilégios para acessar a sala requisitada. "
                     + "Dirija-se a um Apóstolo para requisitar meu acesso.";
-            return false;
-        }
-
-        if (!GrandPrognosticator.isUserInVoiceChannel(state)) {
-            errorMessage = "Pela palavra de Seht, sou compelido. Conecte-se a uma sala de áudio e tente novamente.";
             return false;
         }
 

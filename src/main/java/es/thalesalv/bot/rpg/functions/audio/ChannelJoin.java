@@ -3,7 +3,7 @@ package es.thalesalv.bot.rpg.functions.audio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.thalesalv.bot.rpg.functions.AudioFunction;
+import es.thalesalv.bot.rpg.functions.GenericFunction;
 import es.thalesalv.bot.rpg.util.GrandPrognosticator;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -14,7 +14,7 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AudioManager;
 
-public class ChannelJoin implements AudioFunction {
+public class ChannelJoin implements GenericFunction {
 
     private Member bot;
     private Member member;

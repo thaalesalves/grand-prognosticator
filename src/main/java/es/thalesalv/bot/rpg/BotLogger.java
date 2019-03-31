@@ -10,6 +10,7 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
+import net.dv8tion.jda.core.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.core.events.self.SelfUpdateNameEvent;
 import net.dv8tion.jda.core.events.user.update.UserUpdateNameEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -45,7 +46,7 @@ public class BotLogger extends ListenerAdapter {
 			LOGGER.info(author.getName() + " alterou o nickname de " + oldNickname + " para " + newNickname);
 			channel.sendMessage(builder.build()).complete();
 		} catch (Exception e) {
-			LOGGER.info(e.getMessage());
+			LOGGER.error(e.getMessage());
 			throw new RuntimeException(e);
 		}
 	}
@@ -67,7 +68,7 @@ public class BotLogger extends ListenerAdapter {
 			LOGGER.info(author.getName() + " alterou o nickname de " + oldNickname + " para " + newNickname);
 			channel.sendMessage(builder.build()).complete();
 		} catch (Exception e) {
-			LOGGER.info(e.getMessage());
+			LOGGER.error(e.getMessage());
 			throw new RuntimeException(e);
 		}
 	}
@@ -88,8 +89,18 @@ public class BotLogger extends ListenerAdapter {
 			LOGGER.info(author.getName() + " editou uma mensagem em " + messageChannel.getName());
 			channel.sendMessage(builder.build()).complete();
 		} catch (Exception e) {
-			LOGGER.info(e.getMessage());
+			LOGGER.error(e.getMessage());
 			throw new RuntimeException(e);
 		}
+	}
+	
+	@Override
+	public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
+	    try {
+	        
+	    } catch (Exception e) {
+	        LOGGER.error(e.getMessage());
+            throw new RuntimeException(e);
+	    }
 	}
 }

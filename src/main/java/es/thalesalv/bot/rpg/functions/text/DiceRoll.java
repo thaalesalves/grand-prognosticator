@@ -8,16 +8,17 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.thalesalv.bot.rpg.functions.TextFunction;
+import es.thalesalv.bot.rpg.functions.GenericFunction;
 import es.thalesalv.bot.rpg.util.GrandPrognosticator;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-public class DiceRoll extends TextFunction {
+public class DiceRoll implements GenericFunction {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiceRoll.class);
 
     @Override
-    public EmbedBuilder buildMessage(String... strings) throws Exception {
+    public EmbedBuilder execute(String... strings) throws Exception {
         try {
             Integer diceQty = strings[0].equals("") ? 1 : Integer.parseInt(strings[0]);
             Integer dice = Integer.parseInt(strings[1]);
@@ -48,5 +49,11 @@ public class DiceRoll extends TextFunction {
             LOGGER.error(e.getMessage());
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void setUp(MessageReceivedEvent event) throws Exception {
+        // TODO Auto-generated method stub
+
     }
 }

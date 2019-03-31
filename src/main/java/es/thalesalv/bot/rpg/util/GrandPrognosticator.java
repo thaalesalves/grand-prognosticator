@@ -24,8 +24,7 @@ import net.dv8tion.jda.core.managers.AudioManager;
 
 public class GrandPrognosticator {
 
-    public static final Integer BOT_AUDIO_VOLUME = Integer
-            .parseInt(GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.volume"));
+    public static final Integer BOT_AUDIO_VOLUME = Integer.parseInt(GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.volume"));
     public static final String GAME_PLAYING = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.game.playing");
     public static final String BOT_OPERATOR = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.operator");
     public static final String BOT_TOKEN = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.token");

@@ -6,11 +6,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 
+import es.thalesalv.bot.rpg.BotLogger;
 import es.thalesalv.bot.rpg.model.YouTubeVideo;
 
 public class YouTube {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(YouTube.class);
 
     public static YouTubeVideo get(String url) {
 
@@ -22,8 +28,8 @@ public class YouTube {
             data = lerUrl(GrandPrognosticator.YOUTUBE_API_URL.replace("APIKEY", GrandPrognosticator.YOUTUBE_KEY)
                     .replace("VIDEOID", videoId).replace("PART", part));
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            LOGGER.error(e.getMessage());
+            throw new RuntimeException(e);
         }
 
         RespostaYouTube response = gson.fromJson(data, RespostaYouTube.class);

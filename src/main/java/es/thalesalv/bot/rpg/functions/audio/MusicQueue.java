@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
-import es.thalesalv.bot.rpg.functions.AudioFunction;
+import es.thalesalv.bot.rpg.functions.GenericFunction;
 import es.thalesalv.bot.rpg.model.YouTubeVideo;
 import es.thalesalv.bot.rpg.util.GrandPrognosticator;
 import es.thalesalv.bot.rpg.util.YouTube;
@@ -19,7 +19,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-public class MusicQueue implements AudioFunction {
+public class MusicQueue implements GenericFunction {
 
     private Guild guild;
     private EmbedBuilder builder;

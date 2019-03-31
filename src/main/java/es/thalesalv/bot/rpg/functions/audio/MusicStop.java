@@ -3,7 +3,7 @@ package es.thalesalv.bot.rpg.functions.audio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.thalesalv.bot.rpg.functions.AudioFunction;
+import es.thalesalv.bot.rpg.functions.GenericFunction;
 import es.thalesalv.bot.rpg.util.GrandPrognosticator;
 import es.thalesalv.bot.rpg.util.lavaplayer.GuildMusicManager;
 import es.thalesalv.bot.rpg.util.lavaplayer.PlayerManager;
@@ -11,7 +11,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-public class MusicStop implements AudioFunction {
+public class MusicStop implements GenericFunction {
 
     private Guild guild;
     private EmbedBuilder builder;

@@ -1,0 +1,15 @@
+discord.bot.token=TOKEN
+discord.bot.id=BOT_ID
+discord.bot.secret=BOT_SECRET
+discord.guild.id=GUILD_ID
+discord.guild.log.channel.id=LOG_CHANNEL_ID
+discord.bot.operator=!gp
+discord.bot.footer.text=The Grand Prognosticator. By the Word of Seht, I am bound.
+discord.bot.footer.image=http://img1.wikia.nocookie.net/__cb20120612190227/elderscrolls/images/f/f7/TESOnlineIcon.png
+discord.bot.game.playing=Vivec atingindo CHIM
+discord.bot.volume=5
+
+watson.apikey=WATSON_API_KEY
+watson.assistantid=WATSON_ASSISTANT_ID
+
+youtube.api.key=YOUTUBE_API_KEY

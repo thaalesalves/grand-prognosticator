@@ -8,11 +8,11 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.thalesalv.bot.rpg.functions.Function;
+import es.thalesalv.bot.rpg.functions.TextFunction;
 import es.thalesalv.bot.rpg.util.GrandPrognosticator;
 import net.dv8tion.jda.core.EmbedBuilder;
 
-public class DiceRoll extends Function {
+public class DiceRoll extends TextFunction {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiceRoll.class);
 

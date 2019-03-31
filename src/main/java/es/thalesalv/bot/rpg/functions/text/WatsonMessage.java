@@ -3,11 +3,11 @@ package es.thalesalv.bot.rpg.functions.text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.thalesalv.bot.rpg.functions.Function;
+import es.thalesalv.bot.rpg.functions.TextFunction;
 import es.thalesalv.bot.rpg.util.GrandPrognosticator;
 import net.dv8tion.jda.core.EmbedBuilder;
 
-public class WatsonMessage extends Function {
+public class WatsonMessage extends TextFunction {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WatsonMessage.class);
 

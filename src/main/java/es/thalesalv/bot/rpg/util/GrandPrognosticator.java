@@ -17,7 +17,10 @@ import org.springframework.util.ResourceUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.GuildVoiceState;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.VoiceChannel;
+import net.dv8tion.jda.core.managers.AudioManager;
 
 public class GrandPrognosticator {
 
@@ -45,10 +48,6 @@ public class GrandPrognosticator {
     };
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GrandPrognosticator.class);
-
-    public static Boolean isAdmin(Member member) {
-        return member.hasPermission(Permission.ADMINISTRATOR);
-    }
 
     public static void die(JDA jda) {
         jda.shutdown();
@@ -82,5 +81,33 @@ public class GrandPrognosticator {
             LOGGER.error(e.getMessage());
             throw new RuntimeException(e);
         }
+    }
+
+    public static void joinChannel(AudioManager manager, VoiceChannel channel) {
+        manager.openAudioConnection(channel);
+    }
+
+    public static void leaveChannel(AudioManager manager) {
+        manager.closeAudioConnection();
+    }
+
+    public static Boolean isConnected(AudioManager manager) {
+        return manager.isConnected();
+    }
+
+    public static Boolean isUserInVoiceChannel(GuildVoiceState state) {
+        return state.inVoiceChannel();
+    }
+
+    public static Boolean canConnect(VoiceChannel channel, Member bot) {
+        return bot.hasPermission(channel, Permission.VOICE_CONNECT);
+    }
+
+    public static Boolean canSpeak(VoiceChannel channel, Member bot) {
+        return bot.hasPermission(channel, Permission.VOICE_SPEAK);
+    }
+
+    public static Boolean isAdmin(Member member) {
+        return member.hasPermission(Permission.ADMINISTRATOR);
     }
 }

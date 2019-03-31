@@ -3,8 +3,8 @@ package es.thalesalv.bot.rpg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.thalesalv.bot.rpg.util.JBotConfig;
-import es.thalesalv.bot.rpg.util.JBotUtils;
+import es.thalesalv.bot.rpg.util.GrandPrognosticator;
+import es.thalesalv.bot.rpg.util.GrandPrognosticator;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -24,9 +24,9 @@ public class BotLogger extends ListenerAdapter {
 	private static final Logger LOGGER = LoggerFactory.getLogger(BotLogger.class);
 
 	private void setGuild(Event event) throws Exception {
-		guild = event.getJDA().getGuildById(JBotConfig.DISCORD_GUILD_ID);
-		channel = guild.getTextChannelById(JBotConfig.DISCORD_LOG_CHANNEL_ID);
-		builder = JBotUtils.buildBuilder(new EmbedBuilder());
+		guild = event.getJDA().getGuildById(GrandPrognosticator.DISCORD_GUILD_ID);
+		channel = guild.getTextChannelById(GrandPrognosticator.DISCORD_LOG_CHANNEL_ID);
+		builder = GrandPrognosticator.buildBuilder(new EmbedBuilder());
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class BotLogger extends ListenerAdapter {
 
 			builder.setTitle("Refletindo... calculando... logando...");
 			String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** "
-					+ JBotUtils.getCurrentDateTime() + "\n**Evento:** " + oldNickname + " alterou o nome para "
+					+ GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + oldNickname + " alterou o nome para "
 					+ newNickname;
 			builder.setDescription(logContent);
 
@@ -61,7 +61,7 @@ public class BotLogger extends ListenerAdapter {
 
 			builder.setTitle("Refletindo... calculando... logando...");
 			String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** "
-					+ JBotUtils.getCurrentDateTime() + "\n**Evento:** " + oldNickname + " alterou o nome para "
+					+ GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + oldNickname + " alterou o nome para "
 					+ newNickname;
 			builder.setDescription(logContent);
 
@@ -82,7 +82,7 @@ public class BotLogger extends ListenerAdapter {
 			String oldMessage = event.getMessage().getContentRaw();
 			MessageChannel messageChannel = event.getChannel();
 			String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** "
-					+ JBotUtils.getCurrentDateTime() + "\n**Evento:** " + author.getAsMention()
+					+ GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + author.getAsMention()
 					+ " editou uma mensagem em <#" + messageChannel.getId() + ">:\n" + oldMessage;
 			builder.setDescription(logContent);
 

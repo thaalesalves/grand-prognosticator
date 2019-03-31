@@ -8,6 +8,6 @@ public class JBotConfigTest {
 
 	@Test
 	public void testDiscordBot() throws Exception {
-		assertEquals("363936626201853954", JBotConfig.BOT_TOKEN);
+		assertEquals("363936626201853954", GrandPrognosticator.BOT_TOKEN);
 	}
 }

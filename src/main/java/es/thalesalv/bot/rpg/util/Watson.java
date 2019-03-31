@@ -25,7 +25,7 @@ public class Watson {
     public static String sendMessage(String message) throws Exception {
         try {
             MessageInput input = new MessageInput.Builder().text(message).build();
-            MessageOptions messageOptions = new MessageOptions.Builder(JBotConfig.WATSON_ASSISTANT_ID, sessionId)
+            MessageOptions messageOptions = new MessageOptions.Builder(GrandPrognosticator.WATSON_ASSISTANT_ID, sessionId)
                     .input(input).build();
             MessageResponse response = service.message(messageOptions).execute();
             LOGGER.info("Mensagem recebida pelo Watson. Verificando contexto.");
@@ -48,9 +48,9 @@ public class Watson {
     public static void buildSession() throws Exception {
         try {
             LogManager.getLogManager().reset();
-            IamOptions iamOptions = new IamOptions.Builder().apiKey(JBotConfig.WATSON_API_KEY).build();
+            IamOptions iamOptions = new IamOptions.Builder().apiKey(GrandPrognosticator.WATSON_API_KEY).build();
             service = new Assistant("2018-09-20", iamOptions);
-            CreateSessionOptions createSessionOptions = new CreateSessionOptions.Builder(JBotConfig.WATSON_ASSISTANT_ID)
+            CreateSessionOptions createSessionOptions = new CreateSessionOptions.Builder(GrandPrognosticator.WATSON_ASSISTANT_ID)
                     .build();
             SessionResponse session = service.createSession(createSessionOptions).execute();
             sessionId = session.getSessionId();
@@ -62,7 +62,7 @@ public class Watson {
 
     public static void closeSession() {
         try {
-            DeleteSessionOptions deleteSessionOptions = new DeleteSessionOptions.Builder(JBotConfig.WATSON_ASSISTANT_ID,
+            DeleteSessionOptions deleteSessionOptions = new DeleteSessionOptions.Builder(GrandPrognosticator.WATSON_ASSISTANT_ID,
                     sessionId).build();
             service.deleteSession(deleteSessionOptions).execute();
         } catch (Exception e) {

@@ -24,7 +24,8 @@ import net.dv8tion.jda.core.managers.AudioManager;
 
 public class GrandPrognosticator {
 
-    public static final Integer BOT_AUDIO_VOLUME = Integer.parseInt(GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.volume"));
+    public static final Integer BOT_AUDIO_VOLUME = Integer
+            .parseInt(GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.volume"));
     public static final String GAME_PLAYING = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.game.playing");
     public static final String BOT_OPERATOR = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.operator");
     public static final String BOT_TOKEN = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.token");
@@ -37,6 +38,10 @@ public class GrandPrognosticator {
     public static final String DISCORD_GUILD_ID = GrandPrognosticator.fetchBotProperties().getProperty("discord.guild.id");
     public static final String DISCORD_LOG_CHANNEL_ID = GrandPrognosticator.fetchBotProperties()
             .getProperty("discord.guild.log.channel.id");
+    public static final String DISCORD_GENERAL_CHANNEL_ID = GrandPrognosticator.fetchBotProperties()
+            .getProperty("discord.guild.general.channel.id");
+    public static final String DISCORD_CAMPAIGNS_CHANNEL_ID = GrandPrognosticator.fetchBotProperties()
+            .getProperty("discord.guild.campaigns.channel.id");
     public static final String YOUTUBE_API_URL = "https://www.googleapis.com/youtube/v3/videos?id=VIDEOID&key=APIKEY&part=PART";
     public static final String YOUTUBE_KEY = GrandPrognosticator.fetchBotProperties().getProperty("youtube.api.key");
     public static final String[] YOUTUBE_PART = {

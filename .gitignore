@@ -30,3 +30,6 @@ HELP.md
 
 ### OTHER ###
 /src/main/resources/bot.properties
+.DS_Store
+DS_Store
+logs

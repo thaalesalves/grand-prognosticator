@@ -8,7 +8,9 @@ O Grand Prognosticator é integrado com o IBM Watson para machine-learning. Um d
 * Escrito em Java 8 com Spring Boot;
 * Usando JDA para comunicação com a API do Discord;
 * Usando a API v2 do IBM Watson para comunicação com a inteligência;
-* E o herói dos devs Java: Lombok. 
+* Usando a API v3 do YouTube para buscar dados de vídeos para músicas;
+* API do LavaPlayer para tocar músicas em canais de voz;
+* E os heróis dos devs Java: Lombok, Apache Commons e Joda Time.
 
 ## Posso ajudar?
 Claro! Treinar um bot é uma tarefa bem difícil e trabalhosa, e ajuda é bem-vinda. No código inclusive. Caso ache interessante implementar uma função no bot, clone o código, implemente-a e envie através de um pull request. Ou, claro, você pode criar um issue para discutirmos opções. Caso tenha interesse em treinar o bot, me avise para conversarmos sobre como fazê-lo.

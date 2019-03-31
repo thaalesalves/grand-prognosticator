@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
-import es.thalesalv.bot.rpg.BotLogger;
 import es.thalesalv.bot.rpg.model.YouTubeVideo;
 
 public class YouTube {

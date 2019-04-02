@@ -1,17 +1,24 @@
 package es.thalesalv.bot.rpg.model;
 
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class V20CharacterSheet {
+@Entity
+public class CharacterSheetVampireV20 {
 
     /* Detalhes gerais */
-    private String playerTag;
-    private String playerId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long characterId;
+    private Long playerId;
+    private String playerName;
     private String characterName;
     private String chronicle;
     private String demeanor;
@@ -81,7 +88,7 @@ public class V20CharacterSheet {
     private Integer disciplineFiveLevel;
     private String disciplineSix;
     private Integer disciplineSixLevel;
-    
+
     private String backgroundOne;
     private Integer backgroundOneLevel;
     private String backgroundTwo;
@@ -94,12 +101,21 @@ public class V20CharacterSheet {
     private Integer backgroundFiveLevel;
     private String backgroundSix;
     private Integer backgroundSixLevel;
-    
+
     private Integer conscienceConviction;
     private Integer selfControlInstinct;
     private Integer courage;
-    
-    /* Other */
-    private String note;
-    private List<String> notes;
+
+    /* Outros */
+    private String humanityPath;
+    private Integer humanityPathPoints;
+    private String humanityPathBearing;
+    private String humanityPathBearingParentheses;
+
+    private Integer willpower;
+    private Integer willpowerSquare;
+
+    private Integer bloodPool;
+    private Integer bloodPerTurn;
+    private String weakness;
 }

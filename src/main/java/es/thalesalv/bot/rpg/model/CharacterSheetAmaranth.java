@@ -1,10 +1,16 @@
 package es.thalesalv.bot.rpg.model;
 
+import java.io.File;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +19,9 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "sheet_amaranth")
-public class CharacterSheetAmaranth {
+public class CharacterSheetAmaranth extends Sheet {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(CharacterSheetAmaranth.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,4 +29,16 @@ public class CharacterSheetAmaranth {
     private Long playerId;
     private String playerName;
     private String characterName;
+    
+    @Override
+    public PDDocument populateSheet() {
+        try {
+            PDDocument sheet;
+            sheet = PDDocument.load(new File(""));
+            return sheet;
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
 }

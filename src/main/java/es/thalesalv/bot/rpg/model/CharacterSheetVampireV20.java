@@ -1,9 +1,15 @@
 package es.thalesalv.bot.rpg.model;
 
+import java.io.File;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +17,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class CharacterSheetVampireV20 {
+public class CharacterSheetVampireV20 extends Sheet {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CharacterSheetVampireV20.class);
 
     /* Detalhes gerais */
     @Id
@@ -118,4 +126,16 @@ public class CharacterSheetVampireV20 {
     private Integer bloodPool;
     private Integer bloodPerTurn;
     private String weakness;
+
+    @Override
+    public PDDocument populateSheet() {
+        try {
+            PDDocument sheet;
+            sheet = PDDocument.load(new File(""));
+            return sheet;
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
 }

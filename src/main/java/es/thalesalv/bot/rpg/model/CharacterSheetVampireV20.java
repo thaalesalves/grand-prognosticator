@@ -3,14 +3,13 @@ package es.thalesalv.bot.rpg.model;
 import java.io.File;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.thalesalv.bot.rpg.util.GrandPrognosticator;
+import es.thalesalv.bot.rpg.util.PDFUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,12 +21,6 @@ public class CharacterSheetVampireV20 extends Sheet {
     private static final Logger LOGGER = LoggerFactory.getLogger(CharacterSheetVampireV20.class);
 
     /* Detalhes gerais */
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long characterId;
-    private Long playerId;
-    private String playerName;
-    private String characterName;
     private String chronicle;
     private String demeanor;
     private String nature;
@@ -130,12 +123,20 @@ public class CharacterSheetVampireV20 extends Sheet {
     @Override
     public PDDocument populateSheet() {
         try {
-            PDDocument sheet;
-            sheet = PDDocument.load(new File(""));
+            String fileName = generateFileName();
+            PDDocument sheet = PDDocument.load(new File(GrandPrognosticator.SHEET_DIR + fileName));
+            
+            PDFUtils.setField("", "", sheet);
+            
             return sheet;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    protected String gameName() {
+        return "V20";
     }
 }

@@ -3,9 +3,6 @@ package es.thalesalv.bot.rpg.model;
 import java.io.File;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -20,16 +17,9 @@ import lombok.Setter;
 @Entity
 @Table(name = "sheet_amaranth")
 public class CharacterSheetAmaranth extends Sheet {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CharacterSheetAmaranth.class);
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long characterId;
-    private Long playerId;
-    private String playerName;
-    private String characterName;
-    
     @Override
     public PDDocument populateSheet() {
         try {
@@ -40,5 +30,10 @@ public class CharacterSheetAmaranth extends Sheet {
             LOGGER.error(e.getMessage());
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    protected String gameName() {
+        return "Amaranth";
     }
 }

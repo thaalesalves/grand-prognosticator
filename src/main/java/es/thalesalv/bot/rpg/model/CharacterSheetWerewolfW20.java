@@ -3,9 +3,6 @@ package es.thalesalv.bot.rpg.model;
 import java.io.File;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -20,15 +17,8 @@ import lombok.Setter;
 @Entity
 @Table(name = "sheet_werewolfw20")
 public class CharacterSheetWerewolfW20 extends Sheet {
-    
-    private static final Logger LOGGER = LoggerFactory.getLogger(CharacterSheetWerewolfW20.class);
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long characterId;
-    private Long playerId;
-    private String playerName;
-    private String characterName;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CharacterSheetWerewolfW20.class);
 
     @Override
     public PDDocument populateSheet() {
@@ -40,5 +30,10 @@ public class CharacterSheetWerewolfW20 extends Sheet {
             LOGGER.error(e.getMessage());
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    protected String gameName() {
+        return "W20";
     }
 }

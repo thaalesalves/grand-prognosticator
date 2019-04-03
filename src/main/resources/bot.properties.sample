@@ -1,15 +1,21 @@
-discord.bot.token=TOKEN
-discord.bot.id=BOT_ID
-discord.bot.secret=BOT_SECRET
-discord.guild.id=GUILD_ID
-discord.guild.log.channel.id=LOG_CHANNEL_ID
+discord.bot.token=
+discord.bot.id=
+discord.bot.secret=
+
+discord.bot.volume=
+discord.bot.game.playing=The Elder Scrolls Online
 discord.bot.operator=!gp
-discord.bot.footer.text=The Grand Prognosticator. By the Word of Seht, I am bound.
-discord.bot.footer.image=http://img1.wikia.nocookie.net/__cb20120612190227/elderscrolls/images/f/f7/TESOnlineIcon.png
-discord.bot.game.playing=Vivec atingindo CHIM
-discord.bot.volume=5
 
-watson.apikey=WATSON_API_KEY
-watson.assistantid=WATSON_ASSISTANT_ID
+discord.bot.footer.text=
+discord.bot.footer.image=
+discord.guild.id=
+discord.guild.log.channel.id=
+discord.guild.general.channel.id=
+discord.guild.campaigns.channel.id=
 
-youtube.api.key=YOUTUBE_API_KEY
+discord.bot.sheet.dir=
+
+youtube.api.key=
+
+watson.apikey=
+watson.assistantid=

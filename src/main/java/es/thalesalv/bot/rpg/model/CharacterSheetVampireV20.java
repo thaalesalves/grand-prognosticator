@@ -3,6 +3,7 @@ package es.thalesalv.bot.rpg.model;
 import java.io.File;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Table(name = "sheet_vampirev20")
 public class CharacterSheetVampireV20 extends Sheet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CharacterSheetVampireV20.class);

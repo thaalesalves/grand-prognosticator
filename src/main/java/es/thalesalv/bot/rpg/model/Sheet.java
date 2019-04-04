@@ -25,10 +25,7 @@ public abstract class Sheet {
     private String characterName;
 
     public abstract PDDocument populateSheet();
+    public abstract String generateFileName();
 
     protected abstract String gameName();
-
-    protected String generateFileName() {
-        return this.playerName + "_" + this.playerId + "_" + this.characterName + this.gameName() + "_" + ".pdf".replace(" ", "_");
-    }
 }

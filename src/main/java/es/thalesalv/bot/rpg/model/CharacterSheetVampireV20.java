@@ -125,11 +125,30 @@ public class CharacterSheetVampireV20 extends Sheet {
     @Override
     public PDDocument populateSheet() {
         try {
-            String fileName = generateFileName();
-            PDDocument sheet = PDDocument.load(new File(GrandPrognosticator.SHEET_DIR + fileName));
-            
-            PDFUtils.setField("", "", sheet);
-            
+            PDDocument sheet = PDDocument.load(new File(GrandPrognosticator.SHEET_DIR + "/models/V20.pdf"));
+
+            PDFUtils.setField("name", this.getCharacterName(), sheet);
+            PDFUtils.setField("player", this.getPlayerName(), sheet);
+            PDFUtils.setField("chronicle", this.getChronicle(), sheet);
+
+            PDFUtils.setField("nature", this.getNature(), sheet);
+            PDFUtils.setField("demeanor", this.getDemeanor(), sheet);
+            PDFUtils.setField("concept", this.getConcept(), sheet);
+
+            PDFUtils.setField("Clan", this.getClan(), sheet);
+            PDFUtils.setField("gen", this.getGeneration(), sheet);
+            PDFUtils.setField("sire", this.getSire(), sheet);
+
+            for (int i = 0; i < this.getStrength(); i++) {
+                String fieldName = "str" + (i + 1);
+                PDFUtils.checkField(fieldName, sheet);
+            }
+
+            for (int i = 0; i < this.getDexterity(); i++) {
+                String fieldName = "dex" + (i + 1);
+                PDFUtils.checkField(fieldName, sheet);
+            }
+
             return sheet;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
@@ -140,5 +159,11 @@ public class CharacterSheetVampireV20 extends Sheet {
     @Override
     protected String gameName() {
         return "V20";
+    }
+
+    @Override
+    public String generateFileName() {
+        return GrandPrognosticator.SHEET_DIR + "/" + this.getPlayerName() + "_" + this.getPlayerId() + "_"
+                + this.getCharacterName() + this.gameName() + "_" + ".pdf".replace(" ", "_");
     }
 }

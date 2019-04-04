@@ -5,6 +5,7 @@ import java.io.File;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
+import org.apache.pdfbox.pdmodel.interactive.form.PDCheckBox;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,11 +40,23 @@ public class PDFUtils {
             throw new RuntimeException(e);
         }
     }
-    
+
     public static void saveDocument(PDDocument document, String destFile) throws Exception {
         try {
             document.save(new File(destFile));
             document.close();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void checkField(String fieldName, PDDocument document) throws Exception {
+        try {
+            PDDocumentCatalog docCatalog = document.getDocumentCatalog();
+            PDAcroForm acroForm = docCatalog.getAcroForm();
+            PDField field = acroForm.getField(fieldName);
+            ((PDCheckBox) field).check();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new RuntimeException(e);

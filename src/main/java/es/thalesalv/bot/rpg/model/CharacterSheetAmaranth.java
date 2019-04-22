@@ -9,6 +9,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.thalesalv.bot.rpg.model.sheet.AttributeSet;
 import es.thalesalv.bot.rpg.util.GrandPrognosticator;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "sheet_amaranth")
 public class CharacterSheetAmaranth extends Sheet {
+    
+    private AttributeSet physical;
+    private AttributeSet social;
+    private AttributeSet mental;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CharacterSheetAmaranth.class);
 

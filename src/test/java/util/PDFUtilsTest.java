@@ -9,6 +9,11 @@ import es.thalesalv.bot.rpg.util.PDFUtils;
 public class PDFUtilsTest {
 
     @Test
+    public void testPopulateRandom() throws Exception {
+        
+    }
+    
+    @Test
     public void testPopulateSheetV20() throws Exception {
         CharacterSheetVampireV20 v20 = new CharacterSheetVampireV20();
 

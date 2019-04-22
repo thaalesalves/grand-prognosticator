@@ -12,6 +12,7 @@ import es.thalesalv.bot.rpg.functions.audio.MusicPlay;
 import es.thalesalv.bot.rpg.functions.audio.MusicQueue;
 import es.thalesalv.bot.rpg.functions.audio.MusicSkip;
 import es.thalesalv.bot.rpg.functions.audio.MusicStop;
+import es.thalesalv.bot.rpg.functions.text.Clear;
 import es.thalesalv.bot.rpg.functions.text.DiceRoll;
 import es.thalesalv.bot.rpg.functions.text.WatsonMessage;
 import es.thalesalv.bot.rpg.util.GrandPrognosticator;
@@ -74,14 +75,13 @@ public class BotChat extends ListenerAdapter {
                             String arg = commands[2];
                             function = new DiceRoll();
                             String[] dicesToRoll = arg.split("d");
-                            builder = function.execute(dicesToRoll[0], dicesToRoll[1], author.getAsMention(),
-                                    author.getName());
+                            builder = function.execute(dicesToRoll[0], dicesToRoll[1], author.getAsMention(), author.getName());
                             anotherCommand = true;
                         }
 
                         if (command.equals("audio")) {
                             String arg = commands[2];
-                            
+
                             if (arg.equals("toque")) {
                                 function = new MusicPlay();
                                 function.setUp(event);
@@ -103,27 +103,35 @@ public class BotChat extends ListenerAdapter {
                                 builder = function.execute(rawCommands);
                                 anotherCommand = true;
                             }
-                            
+
                             if (arg.equals("pare")) {
                                 function = new MusicStop();
                                 function.setUp(event);
                                 builder = function.execute(rawCommands);
                                 anotherCommand = true;
                             }
-                            
+
                             if (arg.equals("lista")) {
                                 function = new MusicQueue();
                                 function.setUp(event);
                                 builder = function.execute(rawCommands);
                                 anotherCommand = true;
                             }
-                            
+
                             if (arg.equals("saia")) {
                                 function = new ChannelLeave();
                                 function.setUp(event);
                                 builder = function.execute(rawCommands);
                                 anotherCommand = true;
                             }
+                        }
+
+                        if (command.equals("apague")) {
+                            function = new Clear();
+                            function.setUp(event);
+                            builder = function.execute(rawCommands);
+                            shouldSend = false;
+                            anotherCommand = false;
                         }
 
                         if (command.equals("morra")) {
@@ -137,8 +145,7 @@ public class BotChat extends ListenerAdapter {
                                 GrandPrognosticator.die(guild.getJDA());
                             }
 
-                            builder.setDescription(
-                                    "Pela palavra de Seht, sou compelido. Você não tem privilégios suficientes para me desligar.");
+                            builder.setDescription("Pela palavra de Seht, sou compelido. Você não tem privilégios suficientes para me desligar.");
                             anotherCommand = true;
                         }
 

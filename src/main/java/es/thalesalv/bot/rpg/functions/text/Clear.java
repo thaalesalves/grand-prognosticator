@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.thalesalv.bot.rpg.functions.GenericFunction;
+import es.thalesalv.bot.rpg.util.GrandPrognosticator;
 import es.thalesalv.bot.rpg.util.Watson;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
@@ -40,7 +41,7 @@ public class Clear implements GenericFunction {
                     if (!msg.getCreationTime().toLocalDate().isBefore(twoWeeksAgo)) {
                         msg.delete().complete();
                     } else {
-                        continue;
+                        break;
                     }
                 }
             } catch (Exception e) {
@@ -50,7 +51,7 @@ public class Clear implements GenericFunction {
             builder.setTitle("Refletindo... calculando... Pela palavra de Seht, eu limpo as mensagens deste canal.");
             builder.setDescription(
                     "Limpas todas as mensagens com até duas semanas de idade deste canal. Esta mensagem será apagada em cinco segundos.");
-            Message answer = channel.sendMessage(builder.build()).complete();
+            Message answer = channel.sendMessage(GrandPrognosticator.buildBuilder(builder).build()).complete();
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -63,19 +64,15 @@ public class Clear implements GenericFunction {
             if (argMsgs <= 100) {
                 try {
                     List<Message> msgs = history.retrievePast(argMsgs).complete();
-
                     for (Message msg : msgs) {
                         LocalDate messageDate = event.getMessage().getCreationTime().toLocalDate();
                         LocalDate twoWeeksAgo = messageDate.minusWeeks(2);
                         if (!msg.getCreationTime().toLocalDate().isBefore(twoWeeksAgo)) {
                             msg.delete().complete();
                         } else {
-                            continue;
+                            break;
                         }
                     }
-                    msgs.forEach(msg -> {
-
-                    });
 
                     builder.setTitle("Refletindo... calculando... Pela palavra de Seht, eu limpo as mensagens deste canal.");
                     builder.setDescription("Removidas últimas " + argMsgs + " mensagens. Esta mensagem será apagada em cinco segundos.");

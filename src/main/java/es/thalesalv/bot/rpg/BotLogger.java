@@ -47,9 +47,8 @@ public class BotLogger extends ListenerAdapter {
             builder.setTitle("Refletindo... calculando... logando...");
             String oldMessage = event.getMessage().getContentRaw();
             MessageChannel messageChannel = event.getChannel();
-            String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** "
-                    + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + author.getAsMention()
-                    + " editou uma mensagem em <#" + messageChannel.getId() + ">:\n" + oldMessage;
+            String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** " + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** "
+                    + author.getAsMention() + " editou uma mensagem em <#" + messageChannel.getId() + ">:\n" + oldMessage;
             builder.setDescription(logContent);
 
             LOGGER.info(author.getName() + " editou uma mensagem em " + messageChannel.getName());
@@ -67,9 +66,8 @@ public class BotLogger extends ListenerAdapter {
             author = event.getUser();
             Message message = event.getChannel().getMessageById(event.getMessageId()).complete();
             ReactionEmote emote = event.getReactionEmote();
-            String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** "
-                    + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + author.getAsMention() + " reagiu com "
-                    + emote.getName() + " à mensagem: \n" + message.getContentRaw();
+            String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** " + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** "
+                    + author.getAsMention() + " reagiu com " + emote.getName() + " à mensagem: \n" + message.getContentRaw();
             builder.setDescription(logContent);
             builder.setTitle("Refletindo... calculando... logando...");
             channel.sendMessage(builder.build()).complete();
@@ -85,9 +83,8 @@ public class BotLogger extends ListenerAdapter {
             setUp(event);
             builder.setTitle("Refletindo... calculando... logando...");
             author = event.getUser();
-            String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** "
-                    + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + author.getAsMention()
-                    + " acaba de entrar no servidor.";
+            String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** " + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** "
+                    + author.getAsMention() + " acaba de entrar no servidor.";
             builder.setDescription(logContent);
             channel.sendMessage(builder.build()).complete();
 
@@ -109,9 +106,8 @@ public class BotLogger extends ListenerAdapter {
             setUp(event);
             builder.setTitle("Refletindo... calculando... logando...");
             author = event.getUser();
-            String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** "
-                    + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + author.getAsMention()
-                    + " acaba de sair do servidor.";
+            String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** " + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** "
+                    + author.getAsMention() + " acaba de sair do servidor.";
             builder.setDescription(logContent);
             channel.sendMessage(builder.build()).complete();
         } catch (Exception e) {
@@ -124,16 +120,23 @@ public class BotLogger extends ListenerAdapter {
     public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent event) {
         try {
             setUp(event);
+            User user = event.getUser();
             List<String> roles = event.getRoles().stream().map(role -> role.getAsMention()).collect(Collectors.toList());
             String rolesString = String.join(", ", roles);
-            String logContent = "**Usuário:** " + event.getUser().getAsMention() + "\n**Data:** "
-                    + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + event.getUser().getAsMention()
-                    + " foi adicionado " + (roles.size() > 1 ? "aos grupos " : "ao grupo ") + rolesString;
+            String logContent = "**Usuário:** " + user.getAsMention() + "\n**Data:** " + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** "
+                    + user.getAsMention() + " foi adicionado " + (roles.size() > 1 ? "aos grupos " : "ao grupo ") + rolesString;
             builder.setDescription(logContent);
             builder.setTitle("Refletindo... calculando... logando...");
-            LOGGER.info(event.getUser().getAsMention() + " foi adicionado " + (roles.size() > 1 ? "aos grupos " : "ao grupo ")
-                    + rolesString);
+            LOGGER.info(user.getAsMention() + " foi adicionado " + (roles.size() > 1 ? "aos grupos " : "ao grupo ") + rolesString);
             channel.sendMessage(builder.build()).complete();
+
+            user.openPrivateChannel().queue((privateChannel) -> {
+                List<String> rolesNoMention = event.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList());
+                String rolesStringNoMention = String.join(", ", rolesNoMention);
+                builder.setDescription("Você foi adicionado " + (roles.size() > 1 ? "aos grupos " : "ao grupo **") + rolesStringNoMention
+                        + "** no servidor **" + guild.getName() + "**.");
+                privateChannel.sendMessage(builder.build()).complete();
+            });
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new RuntimeException(e);
@@ -144,17 +147,23 @@ public class BotLogger extends ListenerAdapter {
     public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
         try {
             setUp(event);
+            User user = event.getUser();
             List<String> roles = event.getRoles().stream().map(role -> role.getAsMention()).collect(Collectors.toList());
             String rolesString = String.join(", ", roles);
-            String logContent = "**Usuário:** " + event.getUser().getAsMention() + "\n**Data:** "
-                    + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + event.getUser().getAsMention()
-                    + " foi removido " + (roles.size() > 1 ? "dos grupos " : "do grupo ") + rolesString;
+            String logContent = "**Usuário:** " + user.getAsMention() + "\n**Data:** " + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** "
+                    + user.getAsMention() + " foi removido " + (roles.size() > 1 ? "dos grupos " : "do grupo ") + rolesString;
             builder.setDescription(logContent);
             builder.setTitle("Refletindo... calculando... logando...");
-            LOGGER.info(event.getUser().getAsMention() + " foi adicionado " + (roles.size() > 1 ? "dos grupos " : "do grupo ")
-                    + rolesString);
+            LOGGER.info(user.getAsMention() + " foi adicionado " + (roles.size() > 1 ? "dos grupos " : "do grupo ") + rolesString);
             channel.sendMessage(builder.build()).complete();
 
+            user.openPrivateChannel().queue((privateChannel) -> {
+                List<String> rolesNoMention = event.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList());
+                String rolesStringNoMention = String.join(", ", rolesNoMention);
+                builder.setDescription("Você foi removido " + (roles.size() > 1 ? "aos grupos " : "ao grupo **") + rolesStringNoMention
+                        + "** no servidor **" + guild.getName() + "**.");
+                privateChannel.sendMessage(builder.build()).complete();
+            });
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new RuntimeException(e);
@@ -170,9 +179,8 @@ public class BotLogger extends ListenerAdapter {
             String newNickname = event.getNewNick() == null ? author.getName() : event.getNewNick();
 
             builder.setTitle("Refletindo... calculando... logando...");
-            String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** "
-                    + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + oldNickname + " alterou o nome para "
-                    + newNickname;
+            String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** " + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** "
+                    + oldNickname + " alterou o nome para " + newNickname;
             builder.setDescription(logContent);
 
             LOGGER.info(author.getName() + " alterou o nickname de " + oldNickname + " para " + newNickname);

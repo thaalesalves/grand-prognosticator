@@ -38,11 +38,10 @@ public class Clear implements GenericFunction {
                     Message msg = msgs.get(0);
                     LocalDate messageDate = event.getMessage().getCreationTime().toLocalDate();
                     LocalDate twoWeeksAgo = messageDate.minusWeeks(2);
-                    if (!msg.getCreationTime().toLocalDate().isBefore(twoWeeksAgo)) {
-                        msg.delete().complete();
-                    } else {
+                    if (msg.getCreationTime().toLocalDate().isBefore(twoWeeksAgo)) {
                         break;
                     }
+                    msg.delete().complete();
                 }
             } catch (Exception e) {
                 LOGGER.error(e.getMessage());
@@ -51,7 +50,7 @@ public class Clear implements GenericFunction {
             builder.setTitle("Refletindo... calculando... Pela palavra de Seht, eu limpo as mensagens deste canal.");
             builder.setDescription(
                     "Limpas todas as mensagens com até duas semanas de idade deste canal. Esta mensagem será apagada em cinco segundos.");
-            Message answer = channel.sendMessage(GrandPrognosticator.buildBuilder(builder).build()).complete();
+            Message answer = channel.sendMessage(builder.build()).complete();
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -63,15 +62,14 @@ public class Clear implements GenericFunction {
         } else if ((argMsgs = Integer.parseInt(arg)) > 0) {
             if (argMsgs <= 100) {
                 try {
-                    List<Message> msgs = history.retrievePast(argMsgs).complete();
+                    List<Message> msgs = history.retrievePast(argMsgs + 1).complete();
                     for (Message msg : msgs) {
                         LocalDate messageDate = event.getMessage().getCreationTime().toLocalDate();
                         LocalDate twoWeeksAgo = messageDate.minusWeeks(2);
-                        if (!msg.getCreationTime().toLocalDate().isBefore(twoWeeksAgo)) {
-                            msg.delete().complete();
-                        } else {
+                        if (msg.getCreationTime().toLocalDate().isBefore(twoWeeksAgo)) {
                             break;
                         }
+                        msg.delete().complete();
                     }
 
                     builder.setTitle("Refletindo... calculando... Pela palavra de Seht, eu limpo as mensagens deste canal.");
@@ -100,7 +98,7 @@ public class Clear implements GenericFunction {
 
     @Override
     public void setUp(MessageReceivedEvent event) throws Exception {
-        builder = new EmbedBuilder();
+        builder = GrandPrognosticator.buildBuilder(new EmbedBuilder());
         history = new MessageHistory(event.getTextChannel());
         channel = event.getChannel();
         this.event = event;

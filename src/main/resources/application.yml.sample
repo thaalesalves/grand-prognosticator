@@ -1,0 +1,40 @@
+# Propriedades do Spring
+server:
+  port: 8080
+spring:
+  application:
+    name: Grand Prognosticator
+logging:
+  path: logs
+  file: grand-prognosticator.log
+
+# Propriedades do robô
+bot:
+  volume:
+  playing:
+  operator:
+  discord:
+    api:
+      token:
+      id:
+      secret:
+    message:
+      footer:
+        icon:
+        text:
+    guild:
+      id:
+      channel:
+        log:
+        general:
+        campaign:
+  rpg:
+    sheet:
+      dir:
+        save:
+        load:
+  watson:
+    apikey:
+    assistantid:
+  youtube:
+    apikey:

@@ -1,19 +1,14 @@
 package es.thalesalv.bot.rpg.util;
 
 import java.awt.Color;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.ResourceUtils;
+import org.springframework.beans.factory.annotation.Value;
 
+import es.thalesalv.bot.rpg.exception.MessageBuilderException;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
@@ -24,27 +19,19 @@ import net.dv8tion.jda.core.managers.AudioManager;
 
 public class GrandPrognosticator {
 
-    public static final String SHEET_DIR = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.sheet.dir");
-    public static final Integer BOT_AUDIO_VOLUME = Integer.parseInt(GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.volume"));
-    public static final String GAME_PLAYING = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.game.playing");
-    public static final String BOT_OPERATOR = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.operator");
-    public static final String BOT_TOKEN = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.token");
-    public static final String BOT_ID = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.id");
-    public static final String BOT_SECRET = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.secret");
-    public static final String WATSON_API_KEY = GrandPrognosticator.fetchBotProperties().getProperty("watson.apikey");
-    public static final String WATSON_ASSISTANT_ID = GrandPrognosticator.fetchBotProperties().getProperty("watson.assistantid");
-    public static final String FOOTER_TEXT = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.footer.text");
-    public static final String FOOTER_IMG = GrandPrognosticator.fetchBotProperties().getProperty("discord.bot.footer.image");
-    public static final String DISCORD_GUILD_ID = GrandPrognosticator.fetchBotProperties().getProperty("discord.guild.id");
-    public static final String DISCORD_LOG_CHANNEL_ID = GrandPrognosticator.fetchBotProperties().getProperty("discord.guild.log.channel.id");
-    public static final String DISCORD_GENERAL_CHANNEL_ID = GrandPrognosticator.fetchBotProperties().getProperty("discord.guild.general.channel.id");
-    public static final String DISCORD_CAMPAIGNS_CHANNEL_ID = GrandPrognosticator.fetchBotProperties()
-            .getProperty("discord.guild.campaigns.channel.id");
-    public static final String YOUTUBE_API_URL = "https://www.googleapis.com/youtube/v3/videos?id=VIDEOID&key=APIKEY&part=PART";
-    public static final String YOUTUBE_KEY = GrandPrognosticator.fetchBotProperties().getProperty("youtube.api.key");
-    public static final String[] YOUTUBE_PART = { "snippet", "contentDetails", "statistics", "status" };
-
+    private static String FOOTER_IMG;
+    private static String FOOTER_TEXT;
     private static final Logger LOGGER = LoggerFactory.getLogger(GrandPrognosticator.class);
+
+    @Value("${bot.discord.message.footer.icon}")
+    private void setFooterImage(String footerImage) {
+        FOOTER_IMG = footerImage;
+    }
+
+    @Value("${bot.discord.message.footer.text}")
+    private void setFooterText(String footerText) {
+        FOOTER_TEXT = footerText;
+    }
 
     public static void die(JDA jda) {
         jda.shutdown();
@@ -53,20 +40,8 @@ public class GrandPrognosticator {
 
     public static String getCurrentDateTime() {
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yyyy 'às' HH:mm");
-        return now.toString(fmt);
-    }
-
-    public static Properties fetchBotProperties() {
-        Properties properties = new Properties();
-        try {
-            File file = ResourceUtils.getFile("classpath:bot.properties");
-            InputStream in = new FileInputStream(file);
-            properties.load(in);
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage());
-        }
-        return properties;
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm");
+        return now.format(fmt);
     }
 
     public static EmbedBuilder buildBuilder(EmbedBuilder builder) throws Exception {
@@ -76,7 +51,7 @@ public class GrandPrognosticator {
             return builder;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new MessageBuilderException("Erro ao gerar mensagem embutida.", e);
         }
     }
 

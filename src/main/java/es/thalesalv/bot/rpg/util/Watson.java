@@ -3,9 +3,6 @@ package es.thalesalv.bot.rpg.util;
 import java.util.List;
 import java.util.logging.LogManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ibm.watson.developer_cloud.assistant.v2.Assistant;
 import com.ibm.watson.developer_cloud.assistant.v2.model.CreateSessionOptions;
 import com.ibm.watson.developer_cloud.assistant.v2.model.DeleteSessionOptions;
@@ -16,17 +13,34 @@ import com.ibm.watson.developer_cloud.assistant.v2.model.MessageResponse;
 import com.ibm.watson.developer_cloud.assistant.v2.model.SessionResponse;
 import com.ibm.watson.developer_cloud.service.security.IamOptions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+
+import es.thalesalv.bot.rpg.exception.WatsonException;
+
 public class Watson {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Watson.class);
+    private static String API_KEY;
+    private static String ASSISTANT_ID;
     private static Assistant service;
     private static String sessionId;
+    private static final Logger LOGGER = LoggerFactory.getLogger(Watson.class);
+
+    @Value("${bot.watson.apikey}")
+    private void setApiKey(String apiKey) {
+        API_KEY = apiKey;
+    }
+
+    @Value("${bot.watson.assistantid}")
+    private void setAssistantId(String assistantId) {
+        ASSISTANT_ID = assistantId;
+    }
 
     public static String sendMessage(String message) throws Exception {
         try {
             MessageInput input = new MessageInput.Builder().text(message).build();
-            MessageOptions messageOptions = new MessageOptions.Builder(GrandPrognosticator.WATSON_ASSISTANT_ID, sessionId)
-                    .input(input).build();
+            MessageOptions messageOptions = new MessageOptions.Builder(ASSISTANT_ID, sessionId).input(input).build();
             MessageResponse response = service.message(messageOptions).execute();
             LOGGER.info("Mensagem recebida pelo Watson. Verificando contexto.");
 
@@ -38,7 +52,7 @@ public class Watson {
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw e;
+            throw new WatsonException("Erro no envio de mensagens para o Watson", e);
         }
 
         LOGGER.info("Contexto da mensagem não reconhecido. Nenhum intent relacionado ao conteúdo.");
@@ -48,26 +62,24 @@ public class Watson {
     public static void buildSession() throws Exception {
         try {
             LogManager.getLogManager().reset();
-            IamOptions iamOptions = new IamOptions.Builder().apiKey(GrandPrognosticator.WATSON_API_KEY).build();
+            IamOptions iamOptions = new IamOptions.Builder().apiKey(API_KEY).build();
             service = new Assistant("2018-09-20", iamOptions);
-            CreateSessionOptions createSessionOptions = new CreateSessionOptions.Builder(GrandPrognosticator.WATSON_ASSISTANT_ID)
-                    .build();
+            CreateSessionOptions createSessionOptions = new CreateSessionOptions.Builder(ASSISTANT_ID).build();
             SessionResponse session = service.createSession(createSessionOptions).execute();
             sessionId = session.getSessionId();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw e;
+            throw new WatsonException("Erro ao criar sessão do Watson", e);
         }
     }
 
     public static void closeSession() {
         try {
-            DeleteSessionOptions deleteSessionOptions = new DeleteSessionOptions.Builder(GrandPrognosticator.WATSON_ASSISTANT_ID,
-                    sessionId).build();
+            DeleteSessionOptions deleteSessionOptions = new DeleteSessionOptions.Builder(ASSISTANT_ID, sessionId).build();
             service.deleteSession(deleteSessionOptions).execute();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw e;
+            throw new WatsonException("Erro ao fechar sessão do Watson", e);
         }
     }
 }

@@ -29,7 +29,7 @@ HELP.md
 .vscode/
 
 ### OTHER ###
-/src/main/resources/bot.properties
+/src/main/resources/application.yml
 .DS_Store
 DS_Store
 logs

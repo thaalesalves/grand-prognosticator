@@ -45,7 +45,13 @@ public class CharacterSheetAmaranth extends Sheet {
 
     @Override
     public String generateFileName() {
-        return sheetSaveDir + "/" + this.getPlayerName() + "_" + this.getPlayerId().intValue() + "_"
-                + this.getCharacterName() + this.gameName() + "_" + ".pdf".replace(" ", "_");
+        StringBuilder builder = new StringBuilder();
+        builder.append(sheetSaveDir + "/");
+        builder.append(this.getPlayerName() + "_");
+        builder.append(this.getPlayerId().intValue() + "_");
+        builder.append(this.getCharacterName() + "_");
+        builder.append(this.gameName() + ".pdf");
+
+        return builder.toString().replace(" ", "_").trim();
     }
 }

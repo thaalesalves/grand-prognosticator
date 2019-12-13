@@ -2,17 +2,15 @@ package es.thalesalv.bot.rpg.model;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class YouTubeVideo {
 
     private String id;
@@ -26,7 +24,7 @@ public class YouTubeVideo {
     private static final Logger LOGGER = LoggerFactory.getLogger(YouTubeVideo.class);
 
     public LocalDateTime getPublishedAt() {
-        return new LocalDateTime(this.publishedAt);
+        return LocalDateTime.parse(this.publishedAt);
     }
 
     public String parsePublishedAt() {

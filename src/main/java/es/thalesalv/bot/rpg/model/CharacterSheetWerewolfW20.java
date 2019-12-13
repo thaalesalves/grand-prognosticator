@@ -9,7 +9,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.thalesalv.bot.rpg.util.GrandPrognosticator;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,7 +39,7 @@ public class CharacterSheetWerewolfW20 extends Sheet {
 
     @Override
     public String generateFileName() {
-        return GrandPrognosticator.SHEET_DIR + "/" + this.getPlayerName() + "_" + this.getPlayerId().intValue() + "_"
+        return sheetSaveDir + "/" + this.getPlayerName() + "_" + this.getPlayerId().intValue() + "_"
                 + this.getCharacterName() + this.gameName() + "_" + ".pdf".replace(" ", "_");
     }
 }

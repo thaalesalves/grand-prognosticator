@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.thalesalv.bot.rpg.model.sheet.AttributeSet;
-import es.thalesalv.bot.rpg.util.GrandPrognosticator;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +18,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "sheet_amaranth")
 public class CharacterSheetAmaranth extends Sheet {
-    
+
     private AttributeSet physical;
     private AttributeSet social;
     private AttributeSet mental;
@@ -45,7 +44,7 @@ public class CharacterSheetAmaranth extends Sheet {
 
     @Override
     public String generateFileName() {
-        return GrandPrognosticator.SHEET_DIR + "/" + this.getPlayerName() + "_" + this.getPlayerId().intValue() + "_"
+        return sheetSaveDir + "/" + this.getPlayerName() + "_" + this.getPlayerId().intValue() + "_"
                 + this.getCharacterName() + this.gameName() + "_" + ".pdf".replace(" ", "_");
     }
 }

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import es.thalesalv.bot.rpg.functions.GenericFunction;
 import es.thalesalv.bot.rpg.util.GrandPrognosticator;
@@ -32,6 +33,9 @@ public class MusicPlay implements GenericFunction {
     private EmbedBuilder builder;
     private String errorMessage;
     private static final Logger LOGGER = LoggerFactory.getLogger(MusicPlay.class);
+
+    @Value("${bot.volume}")
+    private String botVolume;
 
     private Boolean isAble() {
         if (!GrandPrognosticator.isUserInVoiceChannel(state)) {
@@ -68,10 +72,8 @@ public class MusicPlay implements GenericFunction {
             PlayerManager playerManager = PlayerManager.getInstance();
             GuildMusicManager musicManager = playerManager.getGuildMusicManager(guild);
             String songUrl = musicCommands[1];
-            UrlValidator urlValidator = new UrlValidator(new String[] {
-                "http",
-                "https"
-            }, UrlValidator.ALLOW_ALL_SCHEMES);
+            UrlValidator urlValidator = new UrlValidator(new String[] { "http", "https" },
+                    UrlValidator.ALLOW_ALL_SCHEMES);
 
             if (!urlValidator.isValid(songUrl)) {
                 builder.setDescription("Pela palavra de Seht, me foi fornecida uma URL inválida.");
@@ -80,7 +82,7 @@ public class MusicPlay implements GenericFunction {
 
             GrandPrognosticator.joinChannel(manager, channel);
             playerManager.loadAndPlay(textChannel, songUrl);
-            musicManager.player.setVolume(GrandPrognosticator.BOT_AUDIO_VOLUME);
+            musicManager.player.setVolume(Integer.parseInt(botVolume));
 
             builder.setDescription("");
             return builder;

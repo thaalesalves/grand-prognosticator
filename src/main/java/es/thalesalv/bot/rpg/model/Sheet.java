@@ -6,15 +6,20 @@ import javax.persistence.MappedSuperclass;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.beans.factory.annotation.Value;
 
 import es.thalesalv.bot.rpg.util.SheetIdGenerator;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 @MappedSuperclass
 public abstract class Sheet {
+
+    @Value("${bot.rpg.sheet.dir.save}")
+    protected String sheetSaveDir;
+
+    @Value("${bot.rpg.sheet.dir.load}")
+    protected String sheetLoadDir;
 
     @Id
     @GeneratedValue(generator = SheetIdGenerator.generatorName)
@@ -26,6 +31,5 @@ public abstract class Sheet {
 
     public abstract PDDocument populateSheet();
     public abstract String generateFileName();
-
     protected abstract String gameName();
 }

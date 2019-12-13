@@ -9,7 +9,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.thalesalv.bot.rpg.util.GrandPrognosticator;
 import es.thalesalv.bot.rpg.util.PDFUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -125,7 +124,7 @@ public class CharacterSheetVampireV20 extends Sheet {
     @Override
     public PDDocument populateSheet() {
         try {
-            PDDocument sheet = PDDocument.load(new File(GrandPrognosticator.SHEET_DIR + "/models/V20.pdf"));
+            PDDocument sheet = PDDocument.load(new File(sheetLoadDir + "/models/V20.pdf"));
 
             PDFUtils.setField("name", this.getCharacterName(), sheet);
             PDFUtils.setField("player", this.getPlayerName(), sheet);
@@ -163,7 +162,7 @@ public class CharacterSheetVampireV20 extends Sheet {
 
     @Override
     public String generateFileName() {
-        return GrandPrognosticator.SHEET_DIR + "/" + this.getPlayerName() + "_" + this.getPlayerId() + "_"
-                + this.getCharacterName() + this.gameName() + "_" + ".pdf".replace(" ", "_");
+        return sheetSaveDir + "/" + this.getPlayerName() + "_" + this.getPlayerId() + "_" + this.getCharacterName()
+                + this.gameName() + "_" + ".pdf".replace(" ", "_");
     }
 }

@@ -9,6 +9,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.thalesalv.bot.rpg.exception.PDFException;
 import es.thalesalv.bot.rpg.model.Sheet;
 import es.thalesalv.bot.rpg.model.sheet.AttributeSet;
 import lombok.Getter;
@@ -29,12 +30,11 @@ public class CharacterSheetAmaranth extends Sheet {
     @Override
     public PDDocument populateSheet() {
         try {
-            PDDocument sheet;
-            sheet = PDDocument.load(new File(""));
-            return sheet;
+            return PDDocument.load(new File(this.generateFileName()));
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new PDFException("Erro ao gerar ficha de " + this.gameName() + " (ID do jogador: "
+                    + this.getPlayerId().toString() + ")", e);
         }
     }
 
@@ -46,11 +46,11 @@ public class CharacterSheetAmaranth extends Sheet {
     @Override
     public String generateFileName() {
         StringBuilder builder = new StringBuilder();
-        builder.append(sheetSaveDir + "/");
-        builder.append(this.getPlayerName() + "_");
-        builder.append(this.getPlayerId().intValue() + "_");
-        builder.append(this.getCharacterName() + "_");
-        builder.append(this.gameName() + ".pdf");
+        builder.append(sheetSaveDir).append("/");
+        builder.append(this.getPlayerName()).append("_");
+        builder.append(this.getPlayerId().intValue()).append("_");
+        builder.append(this.getCharacterName()).append("_");
+        builder.append(this.gameName()).append(".pdf");
 
         return builder.toString().replace(" ", "_").trim();
     }

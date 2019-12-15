@@ -31,23 +31,19 @@ public class MusicQueue implements GenericFunction {
     public EmbedBuilder execute(String... strings) throws Exception {
         try {
             List<String> videos = new ArrayList<String>();
-            new Object() {
-                int runCount = 0;
-                {
-                    BlockingQueue<AudioTrack> queue = musicManager.scheduler.getQueue();
-
-                    if (queue.size() > 0) {
-                        queue.stream().peek(x -> runCount++).forEach(track -> {
-                            YouTubeVideo video = YouTube.get(track.getInfo().uri);
-                            videos.add("**" + runCount + ".** " + video.getTitle() + " de **" + video.getCreator() + "**;");
-                        });
-
-                        builder.setDescription(String.join("\n", videos));
-                    } else {
-                        builder.setDescription("Pela palavra de Seht, a fila musical está vazia.");
-                    }
+            BlockingQueue<AudioTrack> queue = musicManager.scheduler.getQueue();
+            if (queue.size() > 0) {
+                Integer index = 1;
+                for (AudioTrack track : queue) {
+                    YouTubeVideo video = YouTube.get(track.getInfo().uri);
+                    videos.add("**" + index + ".** " + video.getTitle() + " de **" + video.getCreator() + "**;");
+                    index++;
                 }
-            };
+
+                builder.setDescription(String.join("\n", videos));
+            } else {
+                builder.setDescription("Pela palavra de Seht, a fila musical está vazia.");
+            }
 
             builder.setTitle("Refletindo... processando... listando fila musical");
             return builder;

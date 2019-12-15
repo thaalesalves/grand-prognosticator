@@ -21,7 +21,7 @@ public class PDFUtils {
             return sheet;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 
@@ -37,7 +37,7 @@ public class PDFUtils {
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 
@@ -47,7 +47,7 @@ public class PDFUtils {
             document.close();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 
@@ -59,7 +59,7 @@ public class PDFUtils {
             ((PDCheckBox) field).check();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 }

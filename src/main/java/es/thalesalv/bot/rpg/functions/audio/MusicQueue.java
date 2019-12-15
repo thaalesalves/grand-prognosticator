@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import es.thalesalv.bot.rpg.functions.GenericFunction;
 import es.thalesalv.bot.rpg.model.YouTubeVideo;
@@ -53,7 +53,7 @@ public class MusicQueue implements GenericFunction {
             return builder;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 

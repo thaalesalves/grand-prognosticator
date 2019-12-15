@@ -88,7 +88,7 @@ public class MusicPlay implements GenericFunction {
             return builder;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 

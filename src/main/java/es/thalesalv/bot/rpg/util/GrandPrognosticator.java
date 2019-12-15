@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
-import es.thalesalv.bot.rpg.exception.MessageBuilderException;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
@@ -51,7 +50,7 @@ public class GrandPrognosticator {
             return builder;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new MessageBuilderException("Erro ao gerar mensagem embutida.", e);
+            throw e;
         }
     }
 

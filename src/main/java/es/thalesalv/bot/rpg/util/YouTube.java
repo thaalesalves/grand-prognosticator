@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.model.YouTubeVideo;
 
 public class YouTube {
@@ -21,32 +22,30 @@ public class YouTube {
     private static final Logger LOGGER = LoggerFactory.getLogger(YouTube.class);
 
     public static YouTubeVideo get(String url) {
-
-        Gson gson = new Gson();
-        String data = null;
         try {
+            String data = null;
             String videoId = url.split("v=")[1];
             String part = String.join(",", PART);
             data = lerUrl(API_URL.replace("APIKEY", API_KEY).replace("VIDEOID", videoId).replace("PART", part));
+
+            Gson gson = new Gson();
+            RespostaYouTube response = gson.fromJson(data, RespostaYouTube.class);
+            Items videoData = response.items.get(0);
+            YouTubeVideo video = new YouTubeVideo();
+            video.setTitle(videoData.snippet.title);
+            video.setDescription(videoData.snippet.description);
+            video.setId(videoData.id);
+            video.setLikeCount(videoData.statistics.likeCount);
+            video.setViewCount(videoData.statistics.viewCount);
+            video.setUrl(url);
+            video.setCreator(videoData.snippet.channelTitle);
+            video.setPublishedAt(videoData.snippet.publishedAt);
+
+            return video;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new FactotumException(e);
         }
-
-        RespostaYouTube response = gson.fromJson(data, RespostaYouTube.class);
-        Items videoData = response.items.get(0);
-
-        YouTubeVideo video = new YouTubeVideo();
-        video.setTitle(videoData.snippet.title);
-        video.setDescription(videoData.snippet.description);
-        video.setId(videoData.id);
-        video.setLikeCount(videoData.statistics.likeCount);
-        video.setViewCount(videoData.statistics.viewCount);
-        video.setUrl(url);
-        video.setCreator(videoData.snippet.channelTitle);
-        video.setPublishedAt(videoData.snippet.publishedAt);
-
-        return video;
     }
 
     private static String lerUrl(String urlString) throws Exception {

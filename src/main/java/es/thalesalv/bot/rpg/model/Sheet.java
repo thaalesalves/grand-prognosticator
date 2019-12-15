@@ -29,7 +29,7 @@ public abstract class Sheet {
     private String playerName;
     private String characterName;
 
-    public abstract PDDocument populateSheet();
+    public abstract PDDocument populateSheet() throws Exception;
     public abstract String generateFileName();
     protected abstract String gameName();
 }

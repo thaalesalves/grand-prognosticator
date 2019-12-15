@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
-import es.thalesalv.bot.rpg.exception.ChatException;
+import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.functions.GenericFunction;
 import es.thalesalv.bot.rpg.functions.audio.ChannelJoin;
 import es.thalesalv.bot.rpg.functions.audio.ChannelLeave;
@@ -153,7 +153,7 @@ public class ChatService extends ListenerAdapter {
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new ChatException("Erro tratando mensagens de chat", e);
+            throw new FactotumException(e);
         }
     }
 }

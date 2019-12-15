@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
+import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.util.GrandPrognosticator;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -69,7 +70,7 @@ public class ActivityService extends ListenerAdapter {
             channel.sendMessage(builder.build()).complete();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new FactotumException(e);
         }
     }
 
@@ -88,7 +89,7 @@ public class ActivityService extends ListenerAdapter {
             channel.sendMessage(builder.build()).complete();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new FactotumException(e);
         }
     }
 
@@ -112,7 +113,7 @@ public class ActivityService extends ListenerAdapter {
             generalChannel.sendMessage(builder.build()).complete();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new FactotumException(e);
         }
     }
 
@@ -129,7 +130,7 @@ public class ActivityService extends ListenerAdapter {
             channel.sendMessage(builder.build()).complete();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new FactotumException(e);
         }
     }
 
@@ -160,7 +161,7 @@ public class ActivityService extends ListenerAdapter {
             });
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new FactotumException(e);
         }
     }
 
@@ -191,7 +192,7 @@ public class ActivityService extends ListenerAdapter {
             });
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new FactotumException(e);
         }
     }
 
@@ -213,7 +214,7 @@ public class ActivityService extends ListenerAdapter {
             channel.sendMessage(builder.build()).complete();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new FactotumException(e);
         }
     }
 }

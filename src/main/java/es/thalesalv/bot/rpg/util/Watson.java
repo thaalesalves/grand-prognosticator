@@ -17,8 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
-import es.thalesalv.bot.rpg.exception.WatsonException;
-
 public class Watson {
 
     private static String API_KEY;
@@ -52,7 +50,7 @@ public class Watson {
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new WatsonException("Erro no envio de mensagens para o Watson", e);
+            throw e;
         }
 
         LOGGER.info("Contexto da mensagem não reconhecido. Nenhum intent relacionado ao conteúdo.");
@@ -69,7 +67,7 @@ public class Watson {
             sessionId = session.getSessionId();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new WatsonException("Erro ao criar sessão do Watson", e);
+            throw e;
         }
     }
 
@@ -79,7 +77,7 @@ public class Watson {
             service.deleteSession(deleteSessionOptions).execute();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new WatsonException("Erro ao fechar sessão do Watson", e);
+            throw e;
         }
     }
 }

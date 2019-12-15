@@ -21,7 +21,7 @@ public class WatsonMessage implements GenericFunction {
             return GrandPrognosticator.buildBuilder(builder);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 

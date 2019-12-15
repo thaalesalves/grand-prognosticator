@@ -1,9 +1,6 @@
 # Propriedades do Spring
-server:
-  port: 8080
-spring:
-  application:
-    name: Grand Prognosticator
+server.port: 8080
+spring.application.name: The Grand Prognosticator
 logging:
   path: logs
   file: grand-prognosticator.log
@@ -18,23 +15,19 @@ bot:
       token:
       id:
       secret:
-    message:
-      footer:
-        icon:
-        text:
+    message.footer:
+      icon:
+      text:
     guild:
       id:
       channel:
         log:
         general:
         campaign:
-  rpg:
-    sheet:
-      dir:
-        save:
-        load:
+  rpg.sheet.dir:
+    save:
+    load:
   watson:
     apikey:
     assistantid:
-  youtube:
-    apikey:
+  youtube.apikey:

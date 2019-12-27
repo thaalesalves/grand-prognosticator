@@ -1,4 +1,4 @@
-package es.thalesalv.bot.rpg.functions.text;
+package es.thalesalv.bot.rpg.function.text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,14 +8,22 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.thalesalv.bot.rpg.functions.GenericFunction;
-import es.thalesalv.bot.rpg.util.GrandPrognosticator;
+import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
+import es.thalesalv.bot.rpg.function.GenericFunction;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class DiceRoll implements GenericFunction {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiceRoll.class);
+
+    @NonNull
+    private GrandPrognosticator grandPrognosticator;
 
     @Override
     public EmbedBuilder execute(String... strings) throws Exception {
@@ -44,7 +52,7 @@ public class DiceRoll implements GenericFunction {
                             ? "seus dados são: " + diceRolls + " (" + diceListInteger.stream().mapToInt(Integer::intValue).sum()
                                     + ")"
                             : "seu dado é: " + diceRolls));
-            return GrandPrognosticator.buildBuilder(builder);
+            return grandPrognosticator.buildBuilder(builder);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new RuntimeException(e);

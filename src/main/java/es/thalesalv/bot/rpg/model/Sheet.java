@@ -7,11 +7,13 @@ import javax.persistence.MappedSuperclass;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.util.SheetIdGenerator;
 import lombok.Data;
 
 @Data
+@Component
 @MappedSuperclass
 public abstract class Sheet {
 

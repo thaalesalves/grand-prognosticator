@@ -6,8 +6,12 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-import es.thalesalv.bot.rpg.util.GrandPrognosticator;
+import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
@@ -24,6 +28,9 @@ import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+@Component
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class ActivityService extends ListenerAdapter {
 
     private Guild guild;
@@ -32,6 +39,9 @@ public class ActivityService extends ListenerAdapter {
     private EmbedBuilder builder;
     private User author;
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityService.class);
+
+    @NonNull
+    private GrandPrognosticator grandPrognosticator;
 
     @Value("${bot.discord.guild.id}")
     private String guildId;
@@ -49,7 +59,7 @@ public class ActivityService extends ListenerAdapter {
         guild = event.getJDA().getGuildById(guildId);
         channel = guild.getTextChannelById(logChannelId);
         generalChannel = guild.getTextChannelById(generalChannelId);
-        builder = GrandPrognosticator.buildBuilder(new EmbedBuilder());
+        builder = grandPrognosticator.buildBuilder(new EmbedBuilder());
     }
 
     @Override
@@ -61,7 +71,7 @@ public class ActivityService extends ListenerAdapter {
             String oldMessage = event.getMessage().getContentRaw();
             MessageChannel messageChannel = event.getChannel();
             String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** "
-                    + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + author.getAsMention()
+                    + grandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + author.getAsMention()
                     + " editou uma mensagem em <#" + messageChannel.getId() + ">:\n" + oldMessage;
             builder.setDescription(logContent);
 
@@ -81,7 +91,7 @@ public class ActivityService extends ListenerAdapter {
             Message message = event.getChannel().getMessageById(event.getMessageId()).complete();
             ReactionEmote emote = event.getReactionEmote();
             String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** "
-                    + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + author.getAsMention()
+                    + grandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + author.getAsMention()
                     + " reagiu com " + emote.getName() + " à mensagem: \n" + message.getContentRaw();
             builder.setDescription(logContent);
             builder.setTitle("Refletindo... calculando... logando...");
@@ -99,7 +109,7 @@ public class ActivityService extends ListenerAdapter {
             builder.setTitle("Refletindo... calculando... logando...");
             author = event.getUser();
             String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** "
-                    + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + author.getAsMention()
+                    + grandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + author.getAsMention()
                     + " acaba de entrar no servidor.";
             builder.setDescription(logContent);
             channel.sendMessage(builder.build()).complete();
@@ -123,7 +133,7 @@ public class ActivityService extends ListenerAdapter {
             builder.setTitle("Refletindo... calculando... logando...");
             author = event.getUser();
             String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** "
-                    + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + author.getAsMention()
+                    + grandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + author.getAsMention()
                     + " acaba de sair do servidor.";
             builder.setDescription(logContent);
             channel.sendMessage(builder.build()).complete();
@@ -142,7 +152,7 @@ public class ActivityService extends ListenerAdapter {
                     .collect(Collectors.toList());
             String rolesString = String.join(", ", roles);
             String logContent = "**Usuário:** " + user.getAsMention() + "\n**Data:** "
-                    + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + user.getAsMention()
+                    + grandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + user.getAsMention()
                     + " foi adicionado " + (roles.size() > 1 ? "aos grupos " : "ao grupo ") + rolesString;
             builder.setDescription(logContent);
             builder.setTitle("Refletindo... calculando... logando...");
@@ -173,7 +183,7 @@ public class ActivityService extends ListenerAdapter {
                     .collect(Collectors.toList());
             String rolesString = String.join(", ", roles);
             String logContent = "**Usuário:** " + user.getAsMention() + "\n**Data:** "
-                    + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + user.getAsMention()
+                    + grandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + user.getAsMention()
                     + " foi removido " + (roles.size() > 1 ? "dos grupos " : "do grupo ") + rolesString;
             builder.setDescription(logContent);
             builder.setTitle("Refletindo... calculando... logando...");
@@ -205,7 +215,7 @@ public class ActivityService extends ListenerAdapter {
 
             builder.setTitle("Refletindo... calculando... logando...");
             String logContent = "**Usuário:** " + author.getAsMention() + "\n**Data:** "
-                    + GrandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + oldNickname
+                    + grandPrognosticator.getCurrentDateTime() + "\n**Evento:** " + oldNickname
                     + " alterou o nome para " + newNickname;
             builder.setDescription(logContent);
 

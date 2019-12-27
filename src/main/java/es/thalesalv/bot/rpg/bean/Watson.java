@@ -1,7 +1,10 @@
-package es.thalesalv.bot.rpg.util;
+package es.thalesalv.bot.rpg.bean;
 
 import java.util.List;
 import java.util.logging.LogManager;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import com.ibm.watson.developer_cloud.assistant.v2.Assistant;
 import com.ibm.watson.developer_cloud.assistant.v2.model.CreateSessionOptions;
@@ -16,9 +19,13 @@ import com.ibm.watson.developer_cloud.service.security.IamOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.exception.WatsonException;
+import lombok.NoArgsConstructor;
 
+@Component
+@NoArgsConstructor
 public class Watson {
 
     private static String API_KEY;
@@ -37,7 +44,7 @@ public class Watson {
         ASSISTANT_ID = assistantId;
     }
 
-    public static String sendMessage(String message) throws Exception {
+    public String sendMessage(String message) throws Exception {
         try {
             MessageInput input = new MessageInput.Builder().text(message).build();
             MessageOptions messageOptions = new MessageOptions.Builder(ASSISTANT_ID, sessionId).input(input).build();
@@ -59,7 +66,8 @@ public class Watson {
         return null;
     }
 
-    public static void buildSession() throws Exception {
+    @PostConstruct
+    private void init() throws Exception {
         try {
             LogManager.getLogManager().reset();
             IamOptions iamOptions = new IamOptions.Builder().apiKey(API_KEY).build();
@@ -73,9 +81,11 @@ public class Watson {
         }
     }
 
-    public static void closeSession() {
+    @PreDestroy
+    private void die() throws Exception {
         try {
-            DeleteSessionOptions deleteSessionOptions = new DeleteSessionOptions.Builder(ASSISTANT_ID, sessionId).build();
+            DeleteSessionOptions deleteSessionOptions = new DeleteSessionOptions.Builder(ASSISTANT_ID, sessionId)
+                    .build();
             service.deleteSession(deleteSessionOptions).execute();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());

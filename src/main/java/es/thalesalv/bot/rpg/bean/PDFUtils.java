@@ -1,4 +1,4 @@
-package es.thalesalv.bot.rpg.util;
+package es.thalesalv.bot.rpg.bean;
 
 import java.io.File;
 
@@ -9,12 +9,17 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDCheckBox;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+import lombok.NoArgsConstructor;
+
+@Component
+@NoArgsConstructor
 public class PDFUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PDFUtils.class);
 
-    public static PDDocument getDocument(String path) throws Exception {
+    public PDDocument getDocument(String path) throws Exception {
         try {
             File filePath = new File(path);
             PDDocument sheet = PDDocument.load(filePath);
@@ -25,7 +30,7 @@ public class PDFUtils {
         }
     }
 
-    public static void setField(String fieldName, String value, PDDocument document) throws Exception {
+    public void setField(String fieldName, String value, PDDocument document) throws Exception {
         try {
             PDDocumentCatalog docCatalog = document.getDocumentCatalog();
             PDAcroForm acroForm = docCatalog.getAcroForm();
@@ -41,7 +46,7 @@ public class PDFUtils {
         }
     }
 
-    public static void saveDocument(PDDocument document, String destFile) throws Exception {
+    public void saveDocument(PDDocument document, String destFile) throws Exception {
         try {
             document.save(new File(destFile));
             document.close();
@@ -51,7 +56,7 @@ public class PDFUtils {
         }
     }
 
-    public static void checkField(String fieldName, PDDocument document) throws Exception {
+    public void checkField(String fieldName, PDDocument document) throws Exception {
         try {
             PDDocumentCatalog docCatalog = document.getDocumentCatalog();
             PDAcroForm acroForm = docCatalog.getAcroForm();

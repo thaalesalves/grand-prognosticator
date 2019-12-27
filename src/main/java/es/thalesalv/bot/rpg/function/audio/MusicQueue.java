@@ -1,24 +1,29 @@
-package es.thalesalv.bot.rpg.functions.audio;
+package es.thalesalv.bot.rpg.function.audio;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-
-import es.thalesalv.bot.rpg.functions.GenericFunction;
+import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
+import es.thalesalv.bot.rpg.bean.YouTube;
+import es.thalesalv.bot.rpg.function.GenericFunction;
 import es.thalesalv.bot.rpg.model.YouTubeVideo;
-import es.thalesalv.bot.rpg.util.GrandPrognosticator;
-import es.thalesalv.bot.rpg.util.YouTube;
 import es.thalesalv.bot.rpg.util.lavaplayer.GuildMusicManager;
 import es.thalesalv.bot.rpg.util.lavaplayer.PlayerManager;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class MusicQueue implements GenericFunction {
 
     private Guild guild;
@@ -26,6 +31,12 @@ public class MusicQueue implements GenericFunction {
     private PlayerManager playerManager;
     private GuildMusicManager musicManager;
     private static final Logger LOGGER = LoggerFactory.getLogger(MusicQueue.class);
+
+    @NonNull
+    private GrandPrognosticator grandPrognosticator;
+
+    @NonNull
+    private YouTube youTube;
 
     @Override
     public EmbedBuilder execute(String... strings) throws Exception {
@@ -38,7 +49,7 @@ public class MusicQueue implements GenericFunction {
 
                     if (queue.size() > 0) {
                         queue.stream().peek(x -> runCount++).forEach(track -> {
-                            YouTubeVideo video = YouTube.get(track.getInfo().uri);
+                            YouTubeVideo video = youTube.get(track.getInfo().uri);
                             videos.add("**" + runCount + ".** " + video.getTitle() + " de **" + video.getCreator() + "**;");
                         });
 
@@ -62,7 +73,7 @@ public class MusicQueue implements GenericFunction {
         this.guild = event.getGuild();
         this.playerManager = PlayerManager.getInstance();
         this.musicManager = playerManager.getGuildMusicManager(guild);
-        builder = GrandPrognosticator.buildBuilder(new EmbedBuilder());
+        builder = grandPrognosticator.buildBuilder(new EmbedBuilder());
         builder.setTitle("Refletindo... processando... iniciando processos sonoros...");
     }
 }

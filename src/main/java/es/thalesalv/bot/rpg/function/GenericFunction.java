@@ -1,4 +1,4 @@
-package es.thalesalv.bot.rpg.functions;
+package es.thalesalv.bot.rpg.function;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;

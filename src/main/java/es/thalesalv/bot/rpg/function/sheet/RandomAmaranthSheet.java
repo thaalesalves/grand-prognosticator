@@ -1,8 +1,8 @@
-package es.thalesalv.bot.rpg.functions.sheet;
+package es.thalesalv.bot.rpg.function.sheet;
 
 import java.util.Random;
 
-import es.thalesalv.bot.rpg.functions.GenericFunction;
+import es.thalesalv.bot.rpg.function.GenericFunction;
 import es.thalesalv.bot.rpg.model.sheet.Attributes;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;

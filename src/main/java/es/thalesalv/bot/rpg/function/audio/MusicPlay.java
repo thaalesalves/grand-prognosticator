@@ -1,15 +1,19 @@
-package es.thalesalv.bot.rpg.functions.audio;
+package es.thalesalv.bot.rpg.function.audio;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-import es.thalesalv.bot.rpg.functions.GenericFunction;
-import es.thalesalv.bot.rpg.util.GrandPrognosticator;
+import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
+import es.thalesalv.bot.rpg.function.GenericFunction;
 import es.thalesalv.bot.rpg.util.lavaplayer.GuildMusicManager;
 import es.thalesalv.bot.rpg.util.lavaplayer.PlayerManager;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.GuildVoiceState;
@@ -20,6 +24,9 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AudioManager;
 
+@Component
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class MusicPlay implements GenericFunction {
 
     private Member bot;
@@ -34,23 +41,26 @@ public class MusicPlay implements GenericFunction {
     private String errorMessage;
     private static final Logger LOGGER = LoggerFactory.getLogger(MusicPlay.class);
 
-    @Value("${bot.volume}")
+    @NonNull
+    private GrandPrognosticator grandPrognosticator;
+
+    @Value("${bot.discord.volume}")
     private String botVolume;
 
     private Boolean isAble() {
-        if (!GrandPrognosticator.isUserInVoiceChannel(state)) {
+        if (!grandPrognosticator.isUserInVoiceChannel(state)) {
             errorMessage = "Pela palavra de Seht, sou compelido. Conecte-se a uma sala de áudio e tente novamente.";
             return false;
         }
 
         VoiceChannel botChannel = bot.getVoiceState().getChannel();
         String userChannelId = channel.getId();
-        if (GrandPrognosticator.isConnected(manager) && !userChannelId.equals(botChannel.getId())) {
+        if (grandPrognosticator.isConnected(manager) && !userChannelId.equals(botChannel.getId())) {
             errorMessage = "Pela palavra de Seht, já estou conectado em uma sala. Aguarde minha disponibilidade.";
             return false;
         }
 
-        if (!GrandPrognosticator.canConnect(channel, bot) || !GrandPrognosticator.canSpeak(channel, bot)) {
+        if (!grandPrognosticator.canConnect(channel, bot) || !grandPrognosticator.canSpeak(channel, bot)) {
             errorMessage = "Pela palavra de Seht, não tenho privilégios para acessar a sala requisitada. "
                     + "Dirija-se a um Apóstolo para requisitar meu acesso.";
             return false;
@@ -80,7 +90,7 @@ public class MusicPlay implements GenericFunction {
                 return builder;
             }
 
-            GrandPrognosticator.joinChannel(manager, channel);
+            grandPrognosticator.joinChannel(manager, channel);
             playerManager.loadAndPlay(textChannel, songUrl);
             musicManager.player.setVolume(Integer.parseInt(botVolume));
 
@@ -102,7 +112,7 @@ public class MusicPlay implements GenericFunction {
         this.channel = state.getChannel();
         this.textChannel = event.getTextChannel();
         this.manager = guild.getAudioManager();
-        builder = GrandPrognosticator.buildBuilder(new EmbedBuilder());
+        builder = grandPrognosticator.buildBuilder(new EmbedBuilder());
         builder.setTitle("Refletindo... processando... iniciando processos sonoros...");
     }
 }

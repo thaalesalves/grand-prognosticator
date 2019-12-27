@@ -1,4 +1,4 @@
-package es.thalesalv.bot.rpg.util;
+package es.thalesalv.bot.rpg.bean;
 
 import java.awt.Color;
 import java.time.LocalDateTime;
@@ -7,8 +7,10 @@ import java.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.exception.MessageBuilderException;
+import lombok.NoArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
@@ -17,37 +19,33 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.managers.AudioManager;
 
+@Component
+@NoArgsConstructor
 public class GrandPrognosticator {
 
-    private static String FOOTER_IMG;
-    private static String FOOTER_TEXT;
     private static final Logger LOGGER = LoggerFactory.getLogger(GrandPrognosticator.class);
 
     @Value("${bot.discord.message.footer.icon}")
-    private void setFooterImage(String footerImage) {
-        FOOTER_IMG = footerImage;
-    }
+    private String footerImage;
 
     @Value("${bot.discord.message.footer.text}")
-    private void setFooterText(String footerText) {
-        FOOTER_TEXT = footerText;
-    }
+    private String footerText;
 
-    public static void die(JDA jda) {
+    public void die(JDA jda) {
         jda.shutdown();
         System.exit(0);
     }
 
-    public static String getCurrentDateTime() {
+    public String getCurrentDateTime() {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm");
         return now.format(fmt);
     }
 
-    public static EmbedBuilder buildBuilder(EmbedBuilder builder) throws Exception {
+    public EmbedBuilder buildBuilder(EmbedBuilder builder) throws Exception {
         try {
             builder.setColor(Color.YELLOW);
-            builder.setFooter(GrandPrognosticator.FOOTER_TEXT, GrandPrognosticator.FOOTER_IMG);
+            builder.setFooter(footerText, footerImage);
             return builder;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
@@ -55,31 +53,31 @@ public class GrandPrognosticator {
         }
     }
 
-    public static void joinChannel(AudioManager manager, VoiceChannel channel) {
+    public void joinChannel(AudioManager manager, VoiceChannel channel) {
         manager.openAudioConnection(channel);
     }
 
-    public static void leaveChannel(AudioManager manager) {
+    public void leaveChannel(AudioManager manager) {
         manager.closeAudioConnection();
     }
 
-    public static Boolean isConnected(AudioManager manager) {
+    public Boolean isConnected(AudioManager manager) {
         return manager.isConnected();
     }
 
-    public static Boolean isUserInVoiceChannel(GuildVoiceState state) {
+    public Boolean isUserInVoiceChannel(GuildVoiceState state) {
         return state.inVoiceChannel();
     }
 
-    public static Boolean canConnect(VoiceChannel channel, Member bot) {
+    public Boolean canConnect(VoiceChannel channel, Member bot) {
         return bot.hasPermission(channel, Permission.VOICE_CONNECT);
     }
 
-    public static Boolean canSpeak(VoiceChannel channel, Member bot) {
+    public Boolean canSpeak(VoiceChannel channel, Member bot) {
         return bot.hasPermission(channel, Permission.VOICE_SPEAK);
     }
 
-    public static Boolean isAdmin(Member member) {
+    public Boolean isAdmin(Member member) {
         return member.hasPermission(Permission.ADMINISTRATOR);
     }
 }

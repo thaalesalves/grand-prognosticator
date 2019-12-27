@@ -1,22 +1,27 @@
 package es.thalesalv.bot.rpg.service;
 
+import javax.annotation.PreDestroy;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
+import es.thalesalv.bot.rpg.bean.Watson;
 import es.thalesalv.bot.rpg.exception.ChatException;
-import es.thalesalv.bot.rpg.functions.GenericFunction;
-import es.thalesalv.bot.rpg.functions.audio.ChannelJoin;
-import es.thalesalv.bot.rpg.functions.audio.ChannelLeave;
-import es.thalesalv.bot.rpg.functions.audio.MusicPlay;
-import es.thalesalv.bot.rpg.functions.audio.MusicQueue;
-import es.thalesalv.bot.rpg.functions.audio.MusicSkip;
-import es.thalesalv.bot.rpg.functions.audio.MusicStop;
-import es.thalesalv.bot.rpg.functions.text.Clear;
-import es.thalesalv.bot.rpg.functions.text.DiceRoll;
-import es.thalesalv.bot.rpg.functions.text.WatsonMessage;
-import es.thalesalv.bot.rpg.util.GrandPrognosticator;
-import es.thalesalv.bot.rpg.util.Watson;
+import es.thalesalv.bot.rpg.function.GenericFunction;
+import es.thalesalv.bot.rpg.function.audio.ChannelJoin;
+import es.thalesalv.bot.rpg.function.audio.ChannelLeave;
+import es.thalesalv.bot.rpg.function.audio.MusicPlay;
+import es.thalesalv.bot.rpg.function.audio.MusicQueue;
+import es.thalesalv.bot.rpg.function.audio.MusicSkip;
+import es.thalesalv.bot.rpg.function.audio.MusicStop;
+import es.thalesalv.bot.rpg.function.text.Clear;
+import es.thalesalv.bot.rpg.function.text.DiceRoll;
+import es.thalesalv.bot.rpg.function.text.WatsonMessage;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Guild;
@@ -25,21 +30,30 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+@Component
+@RequiredArgsConstructor
 public class ChatService extends ListenerAdapter {
 
+    private Guild guild;
     private GenericFunction function;
     private static final Logger LOGGER = LoggerFactory.getLogger(ChatService.class);
+
+    @Autowired
+    private GrandPrognosticator grandPrognosticator;
+
+    @Autowired
+    private Watson watson;
 
     @Value("${bot.discord.api.id}")
     private String botId;
 
-    @Value("${bot.operator}")
+    @Value("${bot.discord.operator}")
     private String botOperator;
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         try {
-            Guild guild = event.getGuild();
+            guild = event.getGuild();
             MessageChannel channel = event.getChannel();
             User author = event.getAuthor();
             String content = event.getMessage().getContentDisplay();
@@ -48,9 +62,9 @@ public class ChatService extends ListenerAdapter {
             LOGGER.info("[" + guild.getName() + "] " + author.getName() + " disse em " + channel.getName() + ": " + content);
 
             if (!author.isBot()) {
-                Watson.buildSession();
-                String watsonReply = Watson.sendMessage(rawContent.replaceAll("\n", "    LINE BREAK    ").trim());
-                Watson.closeSession();
+                //Watson.buildSession();
+                String watsonReply = watson.sendMessage(rawContent.replaceAll("\n", "    LINE BREAK    ").trim());
+                //Watson.closeSession();
                 String[] commands = rawContent.replaceAll("\\p{Punct}", "").split(" ");
                 String[] rawCommands = rawContent.split(" ");
                 String firstWord = rawContent.split(" ")[0];
@@ -127,14 +141,14 @@ public class ChatService extends ListenerAdapter {
                         }
 
                         if (command.equals("morra")) {
-                            builder = GrandPrognosticator.buildBuilder(builder);
+                            builder = grandPrognosticator.buildBuilder(builder);
                             builder.setTitle("Refletindo... processando...");
 
-                            if (GrandPrognosticator.isAdmin(guild.getMember(author))) {
+                            if (grandPrognosticator.isAdmin(guild.getMember(author))) {
                                 builder.setDescription("Pela palavra de Seht, sou compelido. Desativando.");
                                 channel.sendMessage(builder.build()).complete();
                                 LOGGER.warn(author.getName() + " desativou o bot. Fechando aplicação.");
-                                GrandPrognosticator.die(guild.getJDA());
+                                grandPrognosticator.die(guild.getJDA());
                             }
 
                             builder.setDescription("Pela palavra de Seht, sou compelido. Você não tem privilégios suficientes para me desligar.");
@@ -155,5 +169,10 @@ public class ChatService extends ListenerAdapter {
             LOGGER.error(e.getMessage());
             throw new ChatException("Erro tratando mensagens de chat", e);
         }
+    }
+
+    @PreDestroy
+    private void die() {
+        guild.getJDA().shutdown();
     }
 }

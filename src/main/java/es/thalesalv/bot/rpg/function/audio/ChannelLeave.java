@@ -1,10 +1,13 @@
-package es.thalesalv.bot.rpg.functions.audio;
+package es.thalesalv.bot.rpg.function.audio;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.thalesalv.bot.rpg.functions.GenericFunction;
-import es.thalesalv.bot.rpg.util.GrandPrognosticator;
+import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
+import es.thalesalv.bot.rpg.function.GenericFunction;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.GuildVoiceState;
@@ -14,6 +17,8 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AudioManager;
 
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class ChannelLeave implements GenericFunction {
 
     private Member member;
@@ -25,11 +30,14 @@ public class ChannelLeave implements GenericFunction {
     private EmbedBuilder builder;
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelLeave.class);
 
+    @NonNull
+    private GrandPrognosticator grandPrognosticator;
+
     @Override
     public EmbedBuilder execute(String... strings) throws Exception {
         try {
             builder.setDescription("Pela palavra de Seht, sou compelido. Saindo de #" + channel.getName());
-            GrandPrognosticator.leaveChannel(manager);
+            grandPrognosticator.leaveChannel(manager);
             return builder;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
@@ -45,7 +53,7 @@ public class ChannelLeave implements GenericFunction {
         this.state = member.getVoiceState();
         this.channel = state.getChannel();
         this.manager = guild.getAudioManager();
-        builder = GrandPrognosticator.buildBuilder(new EmbedBuilder());
+        builder = grandPrognosticator.buildBuilder(new EmbedBuilder());
         builder.setTitle("Refletindo... processando... iniciando processos sonoros...");
     }
 }

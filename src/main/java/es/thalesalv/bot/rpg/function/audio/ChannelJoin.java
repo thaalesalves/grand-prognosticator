@@ -1,10 +1,13 @@
-package es.thalesalv.bot.rpg.functions.audio;
+package es.thalesalv.bot.rpg.function.audio;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.thalesalv.bot.rpg.functions.GenericFunction;
-import es.thalesalv.bot.rpg.util.GrandPrognosticator;
+import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
+import es.thalesalv.bot.rpg.function.GenericFunction;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.GuildVoiceState;
@@ -14,6 +17,8 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AudioManager;
 
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class ChannelJoin implements GenericFunction {
 
     private Member bot;
@@ -27,22 +32,25 @@ public class ChannelJoin implements GenericFunction {
     private String errorMessage;
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelJoin.class);
 
+    @NonNull
+    private GrandPrognosticator grandPrognosticator;
+
     private Boolean isAble() {
         VoiceChannel botChannel = bot.getVoiceState().getChannel();
         String userChannelId = channel.getId();
 
-        if (GrandPrognosticator.isConnected(manager) && !userChannelId.equals(botChannel.getId())) {
+        if (grandPrognosticator.isConnected(manager) && !userChannelId.equals(botChannel.getId())) {
             errorMessage = "Pela palavra de Seht, já estou conectado em uma sala. Aguarde minha disponibilidade.";
             return false;
         }
 
-        if (!GrandPrognosticator.canConnect(channel, bot) || !GrandPrognosticator.canSpeak(channel, bot)) {
+        if (!grandPrognosticator.canConnect(channel, bot) || !grandPrognosticator.canSpeak(channel, bot)) {
             errorMessage = "Pela palavra de Seht, não tenho privilégios para acessar a sala requisitada. "
                     + "Dirija-se a um Apóstolo para requisitar meu acesso.";
             return false;
         }
 
-        if (!GrandPrognosticator.isUserInVoiceChannel(state)) {
+        if (!grandPrognosticator.isUserInVoiceChannel(state)) {
             errorMessage = "Pela palavra de Seht, sou compelido. Conecte-se a uma sala de áudio e tente novamente.";
             return false;
         }
@@ -59,7 +67,7 @@ public class ChannelJoin implements GenericFunction {
             }
 
             builder.setDescription("Pela palavra de Seht, sou compelido. Entrando em #" + channel.getName());
-            GrandPrognosticator.joinChannel(manager, channel);
+            grandPrognosticator.joinChannel(manager, channel);
             return builder;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
@@ -76,7 +84,7 @@ public class ChannelJoin implements GenericFunction {
         this.bot = guild.getSelfMember();
         this.channel = state.getChannel();
         this.manager = guild.getAudioManager();
-        builder = GrandPrognosticator.buildBuilder(new EmbedBuilder());
+        builder = grandPrognosticator.buildBuilder(new EmbedBuilder());
         builder.setTitle("Refletindo... processando... iniciando processos sonoros...");
     }
 }

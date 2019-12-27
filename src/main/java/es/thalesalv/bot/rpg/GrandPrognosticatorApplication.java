@@ -25,7 +25,7 @@ public class GrandPrognosticatorApplication {
         API_TOKEN = apiToken;
     }
 
-    @Value("${bot.playing}")
+    @Value("${bot.discord.playing}")
     private void setGamePlaying(String gamePlaying) {
         GAME_PLAYING = gamePlaying;
     }

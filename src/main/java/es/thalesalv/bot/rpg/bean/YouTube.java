@@ -1,4 +1,4 @@
-package es.thalesalv.bot.rpg.util;
+package es.thalesalv.bot.rpg.bean;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -10,9 +10,13 @@ import com.google.gson.Gson;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.model.YouTubeVideo;
+import lombok.NoArgsConstructor;
 
+@Component
+@NoArgsConstructor
 public class YouTube {
 
     private static String API_KEY;
@@ -20,7 +24,7 @@ public class YouTube {
     private static String[] PART = { "snippet", "contentDetails", "statistics", "status" };
     private static final Logger LOGGER = LoggerFactory.getLogger(YouTube.class);
 
-    public static YouTubeVideo get(String url) {
+    public YouTubeVideo get(String url) {
 
         Gson gson = new Gson();
         String data = null;
@@ -49,7 +53,7 @@ public class YouTube {
         return video;
     }
 
-    private static String lerUrl(String urlString) throws Exception {
+    private String lerUrl(String urlString) throws Exception {
         BufferedReader leitor = null;
         try {
             URL url = new URL(urlString);

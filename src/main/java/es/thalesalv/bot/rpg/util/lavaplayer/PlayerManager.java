@@ -3,8 +3,6 @@ package es.thalesalv.bot.rpg.util.lavaplayer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.NotImplementedException;
-
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -13,17 +11,29 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
+import org.apache.commons.lang3.NotImplementedException;
+
+import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
+import es.thalesalv.bot.rpg.bean.YouTube;
 import es.thalesalv.bot.rpg.model.YouTubeVideo;
-import es.thalesalv.bot.rpg.util.GrandPrognosticator;
-import es.thalesalv.bot.rpg.util.YouTube;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
 
+@RequiredArgsConstructor
 public class PlayerManager {
+
     private static PlayerManager INSTANCE;
     private final AudioPlayerManager playerManager;
     private final Map<Long, GuildMusicManager> musicManagers;
+
+    @NonNull
+    private GrandPrognosticator grandPrognosticator;
+
+    @NonNull
+    private YouTube youTube;
 
     private PlayerManager() {
         this.musicManagers = new HashMap<>();
@@ -48,8 +58,8 @@ public class PlayerManager {
 
     public void loadAndPlay(TextChannel channel, String trackUrl) throws Exception {
         GuildMusicManager musicManager = getGuildMusicManager(channel.getGuild());
-        EmbedBuilder builder = GrandPrognosticator.buildBuilder(new EmbedBuilder());
-        YouTubeVideo video = YouTube.get(trackUrl);
+        EmbedBuilder builder = grandPrognosticator.buildBuilder(new EmbedBuilder());
+        YouTubeVideo video = youTube.get(trackUrl);
         playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
 import es.thalesalv.bot.rpg.bean.YouTube;
+import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.function.GenericFunction;
 import es.thalesalv.bot.rpg.model.YouTubeVideo;
 import es.thalesalv.bot.rpg.util.lavaplayer.GuildMusicManager;
@@ -42,29 +43,25 @@ public class MusicQueue implements GenericFunction {
     public EmbedBuilder execute(String... strings) throws Exception {
         try {
             List<String> videos = new ArrayList<String>();
-            new Object() {
-                int runCount = 0;
-                {
-                    BlockingQueue<AudioTrack> queue = musicManager.scheduler.getQueue();
-
-                    if (queue.size() > 0) {
-                        queue.stream().peek(x -> runCount++).forEach(track -> {
-                            YouTubeVideo video = youTube.get(track.getInfo().uri);
-                            videos.add("**" + runCount + ".** " + video.getTitle() + " de **" + video.getCreator() + "**;");
-                        });
-
-                        builder.setDescription(String.join("\n", videos));
-                    } else {
-                        builder.setDescription("Pela palavra de Seht, a fila musical está vazia.");
-                    }
+            BlockingQueue<AudioTrack> queue = musicManager.scheduler.getQueue();
+            if (queue.size() > 0) {
+                Integer index = 1;
+                for (AudioTrack track : queue) {
+                    YouTubeVideo video = youTube.get(track.getInfo().uri);
+                    videos.add("**" + index + ".** " + video.getTitle() + " de **" + video.getCreator() + "**;");
+                    index++;
                 }
-            };
+
+                builder.setDescription(String.join("\n", videos));
+            } else {
+                builder.setDescription("Pela palavra de Seht, a fila musical está vazia.");
+            }
 
             builder.setTitle("Refletindo... processando... listando fila musical");
             return builder;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new FactotumException(e);
         }
     }
 

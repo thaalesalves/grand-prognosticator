@@ -9,7 +9,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.thalesalv.bot.rpg.exception.PDFException;
+import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.model.Sheet;
 import es.thalesalv.bot.rpg.model.sheet.AttributeSet;
 import lombok.Getter;
@@ -28,13 +28,12 @@ public class CharacterSheetAmaranth extends Sheet {
     private static final Logger LOGGER = LoggerFactory.getLogger(CharacterSheetAmaranth.class);
 
     @Override
-    public PDDocument populateSheet() {
+    public PDDocument populateSheet() throws Exception {
         try {
             return PDDocument.load(new File(this.generateFileName()));
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new PDFException("Erro ao gerar ficha de " + this.gameName() + " (ID do jogador: "
-                    + this.getPlayerId().toString() + ")", e);
+            throw new FactotumException(e);
         }
     }
 

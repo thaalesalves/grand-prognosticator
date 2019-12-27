@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
 import es.thalesalv.bot.rpg.bean.Watson;
-import es.thalesalv.bot.rpg.exception.ChatException;
+import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.function.GenericFunction;
 import es.thalesalv.bot.rpg.function.audio.ChannelJoin;
 import es.thalesalv.bot.rpg.function.audio.ChannelLeave;
@@ -167,7 +167,7 @@ public class ChatService extends ListenerAdapter {
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new ChatException("Erro tratando mensagens de chat", e);
+            throw new FactotumException(e);
         }
     }
 

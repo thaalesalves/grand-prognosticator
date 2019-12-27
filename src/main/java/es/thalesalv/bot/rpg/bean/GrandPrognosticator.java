@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import es.thalesalv.bot.rpg.exception.MessageBuilderException;
+import es.thalesalv.bot.rpg.exception.FactotumException;
 import lombok.NoArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
@@ -49,7 +49,7 @@ public class GrandPrognosticator {
             return builder;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new MessageBuilderException("Erro ao gerar mensagem embutida.", e);
+            throw new FactotumException(e);
         }
     }
 

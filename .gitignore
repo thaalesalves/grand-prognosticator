@@ -32,5 +32,6 @@ HELP.md
 /src/main/resources/application.yml
 .DS_Store
 DS_Store
-logs
-grand-prognosticator.log
+log/
+*.log
+sheets/

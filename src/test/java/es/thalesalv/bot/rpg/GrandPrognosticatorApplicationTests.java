@@ -7,10 +7,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class BotStarterTests {
+public class GrandPrognosticatorApplicationTests {
 
 	@Test
 	public void contextLoads() {
 	}
-
 }

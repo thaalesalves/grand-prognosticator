@@ -8,6 +8,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.thalesalv.bot.rpg.exception.FactotumException;
 import lombok.Data;
 
 @Data
@@ -27,7 +28,7 @@ public class YouTubeVideo {
         return LocalDateTime.parse(this.publishedAt);
     }
 
-    public String parsePublishedAt() {
+    public String parsePublishedAt() throws ParseException {
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy 'às' HH:mm");
@@ -35,8 +36,7 @@ public class YouTubeVideo {
             return outputFormat.format(date);
         } catch (ParseException e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new FactotumException(e);
         }
-
     }
 }

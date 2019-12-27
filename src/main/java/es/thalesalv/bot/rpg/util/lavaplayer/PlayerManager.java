@@ -1,5 +1,6 @@
 package es.thalesalv.bot.rpg.util.lavaplayer;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,9 +13,12 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import org.apache.commons.lang3.NotImplementedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
 import es.thalesalv.bot.rpg.bean.YouTube;
+import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.model.YouTubeVideo;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +32,7 @@ public class PlayerManager {
     private static PlayerManager INSTANCE;
     private final AudioPlayerManager playerManager;
     private final Map<Long, GuildMusicManager> musicManagers;
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerManager.class);
 
     @NonNull
     private GrandPrognosticator grandPrognosticator;
@@ -63,19 +68,26 @@ public class PlayerManager {
         playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                builder.setTitle("Refletindo... carregando... Pela palavra de Seht, adiciono a canção à fila.");
-                builder.setDescription("**Título:** " + video.getTitle() + "\n**Canal:** " + video.getCreator() + "\n**URL:** "
-                        + video.getUrl() + "\n**Visualizações:** " + video.getViewCount() + "\n**Curtidas:** "
-                        + video.getLikeCount() + "\n**Publicação:** " + video.parsePublishedAt());
-                channel.sendMessage(builder.build()).complete();
+                try {
+                    builder.setTitle("Refletindo... carregando... Pela palavra de Seht, adiciono a canção à fila.");
+                    builder.setDescription("**Título:** " + video.getTitle() + "\n**Canal:** " + video.getCreator()
+                            + "\n**URL:** " + video.getUrl() + "\n**Visualizações:** " + video.getViewCount()
+                            + "\n**Curtidas:** " + video.getLikeCount() + "\n**Publicação:** "
+                            + video.parsePublishedAt());
+                    channel.sendMessage(builder.build()).complete();
 
-                play(musicManager, track);
+                    play(musicManager, track);
+                } catch (ParseException e) {
+                    LOGGER.error(e.getMessage());
+                    throw new FactotumException(e);
+                }
             }
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
-                loadFailed(new FriendlyException("Função ainda não implementada. Não é possível reproduzir playlists.", null,
-                        new NotImplementedException("Função ainda não implementada. Não é possível reproduzir playlists.")));
+                loadFailed(new FriendlyException("Função ainda não implementada. Não é possível reproduzir playlists.",
+                        null, new NotImplementedException(
+                                "Função ainda não implementada. Não é possível reproduzir playlists.")));
             }
 
             @Override

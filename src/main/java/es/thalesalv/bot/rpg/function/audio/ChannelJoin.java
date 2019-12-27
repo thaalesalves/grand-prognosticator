@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
+import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.function.GenericFunction;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -71,7 +72,7 @@ public class ChannelJoin implements GenericFunction {
             return builder;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new FactotumException(e);
         }
     }
 

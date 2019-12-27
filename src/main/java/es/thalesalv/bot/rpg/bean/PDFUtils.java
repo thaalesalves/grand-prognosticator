@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import es.thalesalv.bot.rpg.exception.FactotumException;
 import lombok.NoArgsConstructor;
 
 @Component
@@ -26,7 +27,7 @@ public class PDFUtils {
             return sheet;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new FactotumException(e);
         }
     }
 
@@ -42,7 +43,7 @@ public class PDFUtils {
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new FactotumException(e);
         }
     }
 
@@ -52,7 +53,7 @@ public class PDFUtils {
             document.close();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new FactotumException(e);
         }
     }
 
@@ -64,7 +65,7 @@ public class PDFUtils {
             ((PDCheckBox) field).check();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new FactotumException(e);
         }
     }
 }

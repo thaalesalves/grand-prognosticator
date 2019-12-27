@@ -10,7 +10,7 @@
 	<groupId>es.thalesalv</groupId>
 	<artifactId>grand-prognosticator</artifactId>
 	<version>1.0a</version>
-	<name>Roleplaying Server Bot</name>
+	<name>The Grand Prognosticator</name>
 	<description>Bot created for a roleplaying server on Discord, integrated with JDA and IBM Watson.</description>
 
 	<properties>

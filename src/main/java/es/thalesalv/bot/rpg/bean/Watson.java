@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import es.thalesalv.bot.rpg.exception.WatsonException;
+import es.thalesalv.bot.rpg.exception.FactotumException;
 import lombok.NoArgsConstructor;
 
 @Component
@@ -59,7 +59,7 @@ public class Watson {
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new WatsonException("Erro no envio de mensagens para o Watson", e);
+            throw new FactotumException(e);
         }
 
         LOGGER.info("Contexto da mensagem não reconhecido. Nenhum intent relacionado ao conteúdo.");
@@ -77,7 +77,7 @@ public class Watson {
             sessionId = session.getSessionId();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new WatsonException("Erro ao criar sessão do Watson", e);
+            throw new FactotumException(e);
         }
     }
 
@@ -89,7 +89,7 @@ public class Watson {
             service.deleteSession(deleteSessionOptions).execute();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new WatsonException("Erro ao fechar sessão do Watson", e);
+            throw new FactotumException(e);
         }
     }
 }

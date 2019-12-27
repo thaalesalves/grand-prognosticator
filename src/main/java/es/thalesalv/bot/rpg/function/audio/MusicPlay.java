@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
+import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.function.GenericFunction;
 import es.thalesalv.bot.rpg.util.lavaplayer.GuildMusicManager;
 import es.thalesalv.bot.rpg.util.lavaplayer.PlayerManager;
@@ -98,7 +99,7 @@ public class MusicPlay implements GenericFunction {
             return builder;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new FactotumException(e);
         }
     }
 

@@ -69,7 +69,7 @@ public class PlayerManager {
             @Override
             public void trackLoaded(AudioTrack track) {
                 try {
-                    builder.setTitle("Refletindo... carregando... Pela palavra de Seht, adiciono a canção à fila.");
+                    builder.setTitle("Refletindo... carregando... Pela Palavra de Seht, adiciono a canção à fila.");
                     builder.setDescription("**Título:** " + video.getTitle() + "\n**Canal:** " + video.getCreator()
                             + "\n**URL:** " + video.getUrl() + "\n**Visualizações:** " + video.getViewCount()
                             + "\n**Curtidas:** " + video.getLikeCount() + "\n**Publicação:** "
@@ -93,7 +93,7 @@ public class PlayerManager {
             @Override
             public void noMatches() {
                 builder.setTitle("Refletindo... carregando... Erro na requisição.");
-                builder.setDescription("Pela palavra de Seht, não encontrei resultados no URL fornecido: " + trackUrl);
+                builder.setDescription("Pela Palavra de Seht, não encontrei resultados no URL fornecido: " + trackUrl);
                 channel.sendMessage(builder.build()).complete();
             }
 
@@ -101,7 +101,7 @@ public class PlayerManager {
             public void loadFailed(FriendlyException exception) {
                 builder.setTitle("Refletindo... carregando... Erro na requisição.");
                 builder.setDescription(
-                        "Pela palavra de Seht, não foi possível tocar a canção pedida. Apresente-se a um Apóstolo Mecânico com a seguinte pilha: "
+                        "Pela Palavra de Seht, não foi possível tocar a canção pedida. Apresente-se a um Apóstolo Mecânico com a seguinte pilha: "
                                 + exception.getMessage());
                 channel.sendMessage(builder.build()).complete();
             }

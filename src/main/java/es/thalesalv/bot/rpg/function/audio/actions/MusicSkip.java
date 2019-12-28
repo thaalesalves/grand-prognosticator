@@ -1,4 +1,4 @@
-package es.thalesalv.bot.rpg.function.audio;
+package es.thalesalv.bot.rpg.function.audio.actions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,30 +6,24 @@ import org.slf4j.LoggerFactory;
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
 import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.function.GenericFunction;
+import es.thalesalv.bot.rpg.util.lavaplayer.GuildMusicManager;
+import es.thalesalv.bot.rpg.util.lavaplayer.PlayerManager;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.GuildVoiceState;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.managers.AudioManager;
 
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class ChannelLeave implements GenericFunction {
+public class MusicSkip implements GenericFunction {
 
-    private Member member;
-    private User caller;
     private Guild guild;
-    private GuildVoiceState state;
-    private VoiceChannel channel;
-    private AudioManager manager;
     private EmbedBuilder builder;
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChannelLeave.class);
+    private PlayerManager playerManager;
+    private GuildMusicManager musicManager;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MusicSkip.class);
 
     @NonNull
     private GrandPrognosticator grandPrognosticator;
@@ -37,8 +31,8 @@ public class ChannelLeave implements GenericFunction {
     @Override
     public EmbedBuilder execute(String... strings) throws Exception {
         try {
-            builder.setDescription("Pela palavra de Seht, sou compelido. Saindo de #" + channel.getName());
-            grandPrognosticator.leaveChannel(manager);
+            musicManager.scheduler.nextTrack();
+            builder.setDescription("Pela Palavra de Seht, sou compelido. Avançando para próxima canção.");
             return builder;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
@@ -49,11 +43,8 @@ public class ChannelLeave implements GenericFunction {
     @Override
     public void setUp(MessageReceivedEvent event) throws Exception {
         this.guild = event.getGuild();
-        this.caller = event.getAuthor();
-        this.member = guild.getMember(caller);
-        this.state = member.getVoiceState();
-        this.channel = state.getChannel();
-        this.manager = guild.getAudioManager();
+        this.playerManager = PlayerManager.getInstance();
+        this.musicManager = playerManager.getGuildMusicManager(guild);
         builder = grandPrognosticator.buildBuilder(new EmbedBuilder());
         builder.setTitle("Refletindo... processando... iniciando processos sonoros...");
     }

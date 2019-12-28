@@ -1,4 +1,4 @@
-package es.thalesalv.bot.rpg.function.audio;
+package es.thalesalv.bot.rpg.function.audio.actions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,13 +17,13 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class MusicSkip implements GenericFunction {
+public class MusicStop implements GenericFunction {
 
     private Guild guild;
     private EmbedBuilder builder;
     private PlayerManager playerManager;
     private GuildMusicManager musicManager;
-    private static final Logger LOGGER = LoggerFactory.getLogger(MusicSkip.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MusicStop.class);
 
     @NonNull
     private GrandPrognosticator grandPrognosticator;
@@ -31,8 +31,10 @@ public class MusicSkip implements GenericFunction {
     @Override
     public EmbedBuilder execute(String... strings) throws Exception {
         try {
-            musicManager.scheduler.nextTrack();
-            builder.setDescription("Pela palavra de Seht, sou compelido. Avançando para próxima canção.");
+            musicManager.scheduler.clearQueue();
+            musicManager.player.stopTrack();
+            musicManager.player.setPaused(false);
+            builder.setDescription("Pela Palavra de Seht, sou compelido. Cancelando execução musical.");
             return builder;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());

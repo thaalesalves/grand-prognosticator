@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 import es.thalesalv.bot.rpg.exception.FactotumException;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.managers.AudioManager;
 
-@Component
+@Configuration
 @NoArgsConstructor
 public class GrandPrognosticator {
 

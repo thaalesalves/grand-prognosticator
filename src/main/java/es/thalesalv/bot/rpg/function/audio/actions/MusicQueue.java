@@ -1,4 +1,4 @@
-package es.thalesalv.bot.rpg.function.audio;
+package es.thalesalv.bot.rpg.function.audio.actions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ public class MusicQueue implements GenericFunction {
 
                 builder.setDescription(String.join("\n", videos));
             } else {
-                builder.setDescription("Pela palavra de Seht, a fila musical está vazia.");
+                builder.setDescription("Pela Palavra de Seht, a fila musical está vazia.");
             }
 
             builder.setTitle("Refletindo... processando... listando fila musical");

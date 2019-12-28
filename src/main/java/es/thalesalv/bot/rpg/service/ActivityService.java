@@ -5,14 +5,13 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
 import es.thalesalv.bot.rpg.exception.FactotumException;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
@@ -29,9 +28,8 @@ import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-@Component
+@Service
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class ActivityService extends ListenerAdapter {
 
     private Guild guild;
@@ -41,7 +39,7 @@ public class ActivityService extends ListenerAdapter {
     private User author;
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityService.class);
 
-    @NonNull
+    @Autowired
     private GrandPrognosticator grandPrognosticator;
 
     @Value("${bot.discord.guild.id}")
@@ -115,7 +113,7 @@ public class ActivityService extends ListenerAdapter {
             builder.setDescription(logContent);
             channel.sendMessage(builder.build()).complete();
 
-            String welcomeMessage = "Pela palavra de Seht, eu dou as boas-vindas a " + author.getAsMention()
+            String welcomeMessage = "Pela Palavra de Seht, eu dou as boas-vindas a " + author.getAsMention()
                     + ". Você ainda não tem acesso a nenhuma campanha. Dirija-se a um Apóstolo Mecânico ou reaja a um dos emotes em <#"
                     + campaignChannelId + "> para ganhar acesso às salas.";
             builder.setDescription(welcomeMessage);

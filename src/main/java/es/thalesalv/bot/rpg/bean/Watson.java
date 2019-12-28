@@ -3,9 +3,6 @@ package es.thalesalv.bot.rpg.bean;
 import java.util.List;
 import java.util.logging.LogManager;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
 import com.ibm.watson.developer_cloud.assistant.v2.Assistant;
 import com.ibm.watson.developer_cloud.assistant.v2.model.CreateSessionOptions;
 import com.ibm.watson.developer_cloud.assistant.v2.model.DeleteSessionOptions;
@@ -16,6 +13,7 @@ import com.ibm.watson.developer_cloud.assistant.v2.model.MessageResponse;
 import com.ibm.watson.developer_cloud.assistant.v2.model.SessionResponse;
 import com.ibm.watson.developer_cloud.service.security.IamOptions;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +44,7 @@ public class Watson {
 
     public String sendMessage(String message) throws Exception {
         try {
+            this.initSession();
             MessageInput input = new MessageInput.Builder().text(message).build();
             MessageOptions messageOptions = new MessageOptions.Builder(ASSISTANT_ID, sessionId).input(input).build();
             MessageResponse response = service.message(messageOptions).execute();
@@ -53,21 +52,22 @@ public class Watson {
 
             DialogRuntimeResponseGeneric watsonResponse;
             List<DialogRuntimeResponseGeneric> responseGeneric = response.getOutput().getGeneric();
-            if ((watsonResponse = responseGeneric.get(0)) != null) {
+            if (StringUtils.isNotBlank((watsonResponse = responseGeneric.get(0)).getText())) {
                 LOGGER.info("Contexto reconhecido. Enviando resposta do Watson.");
                 return watsonResponse.getText();
             }
+
+            LOGGER.info("Contexto da mensagem não reconhecido. Nenhum intent relacionado ao conteúdo.");
+            throw new FactotumException("Erro ao exibir mensagem do Watson. Contexto da mensagem não reconhecido. Nenhum intent relacionado ao conteúdo. A resposta está nula.");
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new FactotumException(e);
+        } finally {
+            this.killSession();
         }
-
-        LOGGER.info("Contexto da mensagem não reconhecido. Nenhum intent relacionado ao conteúdo.");
-        return null;
     }
 
-    @PostConstruct
-    private void init() throws Exception {
+    private void initSession() throws Exception {
         try {
             LogManager.getLogManager().reset();
             IamOptions iamOptions = new IamOptions.Builder().apiKey(API_KEY).build();
@@ -81,8 +81,7 @@ public class Watson {
         }
     }
 
-    @PreDestroy
-    private void die() throws Exception {
+    private void killSession() throws Exception {
         try {
             DeleteSessionOptions deleteSessionOptions = new DeleteSessionOptions.Builder(ASSISTANT_ID, sessionId)
                     .build();

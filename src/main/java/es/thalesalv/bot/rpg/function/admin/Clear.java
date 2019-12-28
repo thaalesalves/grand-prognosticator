@@ -1,4 +1,4 @@
-package es.thalesalv.bot.rpg.function.text;
+package es.thalesalv.bot.rpg.function.admin;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -7,12 +7,12 @@ import java.util.TimerTask;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
 import es.thalesalv.bot.rpg.bean.Watson;
 import es.thalesalv.bot.rpg.function.GenericFunction;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import es.thalesalv.bot.rpg.function.text.WatsonMessage;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
@@ -20,15 +20,12 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageHistory;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-@NoArgsConstructor
+@Component
 @RequiredArgsConstructor
 public class Clear implements GenericFunction {
 
-    @NonNull
-    private Watson watson;
-
-    @NonNull
-    private GrandPrognosticator grandPrognosticator;
+    private final Watson watson;
+    private final GrandPrognosticator grandPrognosticator;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Clear.class);
     private EmbedBuilder builder;
@@ -100,9 +97,7 @@ public class Clear implements GenericFunction {
             }
         }
 
-        //Watson.buildSession();
         String watsonReply = watson.sendMessage(strings.toString().replaceAll("\n", "    LINE BREAK    ").trim());
-        //Watson.closeSession();
         WatsonMessage watson = new WatsonMessage();
         return watson.execute(watsonReply);
     }

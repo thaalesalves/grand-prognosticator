@@ -7,34 +7,33 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
 import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.function.GenericFunction;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-@NoArgsConstructor
+@Component
 @RequiredArgsConstructor
 public class DiceRoll implements GenericFunction {
 
+    private final GrandPrognosticator grandPrognosticator;
     private static final Logger LOGGER = LoggerFactory.getLogger(DiceRoll.class);
-
-    @NonNull
-    private GrandPrognosticator grandPrognosticator;
 
     @Override
     public EmbedBuilder execute(String... strings) throws Exception {
         try {
-            Integer diceQty = strings[0].equals("") ? 1 : Integer.parseInt(strings[0]);
-            Integer dice = Integer.parseInt(strings[1]);
-            String authorMention = strings[2];
-            String author = strings[3];
+            String authorMention = strings[0];
+            String authorName = strings[1];
+            String[] dicesToRoll = strings[4].split("d");
 
-            LOGGER.info("Rolando " + diceQty + "d" + dice + " para " + author);
+            Integer diceQty = dicesToRoll[0].equals("") ? 1 : Integer.parseInt(dicesToRoll[0]);
+            Integer dice = Integer.parseInt(dicesToRoll[1]);
+
+            LOGGER.info("Rolando " + diceQty + "d" + dice + " para " + authorName);
 
             List<String> diceList = new ArrayList<String>();
             for (int i = 0; i < diceQty; i++) {
@@ -42,16 +41,17 @@ public class DiceRoll implements GenericFunction {
                 diceList.add(String.valueOf(diceRoll));
             }
 
-            List<Integer> diceListInteger = diceList.stream().map(s -> Integer.parseInt(s)).collect(Collectors.toList());
+            List<Integer> diceListInteger = diceList.stream().map(s -> Integer.parseInt(s))
+                    .collect(Collectors.toList());
             String diceRolls = String.join(", ", diceList);
 
             EmbedBuilder builder = new EmbedBuilder();
-            builder.setTitle("Refletindo... calculando... Pela palavra de Seht, eu rolo " + diceQty
+            builder.setTitle("Refletindo... calculando... Pela Palavra de Seht, eu rolo " + diceQty
                     + (diceQty > 1 ? " dados" : " dado") + " de " + dice + " lados.");
             builder.setDescription(authorMention + ", "
                     + (diceQty > 1
-                            ? "seus dados são: " + diceRolls + " (" + diceListInteger.stream().mapToInt(Integer::intValue).sum()
-                                    + ")"
+                            ? "seus dados são: " + diceRolls + " ("
+                                    + diceListInteger.stream().mapToInt(Integer::intValue).sum() + ")"
                             : "seu dado é: " + diceRolls));
             return grandPrognosticator.buildBuilder(builder);
         } catch (Exception e) {
@@ -62,7 +62,5 @@ public class DiceRoll implements GenericFunction {
 
     @Override
     public void setUp(MessageReceivedEvent event) throws Exception {
-        // TODO Auto-generated method stub
-
     }
 }

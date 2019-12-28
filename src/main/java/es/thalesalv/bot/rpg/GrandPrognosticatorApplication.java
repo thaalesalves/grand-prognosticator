@@ -1,5 +1,6 @@
 package es.thalesalv.bot.rpg;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -19,6 +20,18 @@ public class GrandPrognosticatorApplication {
 
     private static String API_TOKEN;
     private static String GAME_PLAYING;
+    private static ChatService CHAT_SERVICE;
+    private static ActivityService ACTIVITY_SERVICE;
+
+    @Autowired
+    private void setActivityService(ActivityService activityService) {
+        ACTIVITY_SERVICE = activityService;
+    }
+
+    @Autowired
+    private void setChatService(ChatService chatService) {
+        CHAT_SERVICE = chatService;
+    }
 
     @Value("${bot.discord.api.token}")
     private void setApiToken(String apiToken) {
@@ -37,6 +50,6 @@ public class GrandPrognosticatorApplication {
             .setGame(Game.watching(GAME_PLAYING))
             .build();
 
-        jda.addEventListener(new ChatService(), new ActivityService());
+        jda.addEventListener(CHAT_SERVICE, ACTIVITY_SERVICE);
     }
 }

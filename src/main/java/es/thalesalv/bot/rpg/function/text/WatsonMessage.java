@@ -2,23 +2,21 @@ package es.thalesalv.bot.rpg.function.text;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
 import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.function.GenericFunction;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-@NoArgsConstructor
-@RequiredArgsConstructor
+@Component
 public class WatsonMessage implements GenericFunction {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WatsonMessage.class);
 
-    @NonNull
+    @Autowired
     private GrandPrognosticator grandPrognosticator;
 
     @Override

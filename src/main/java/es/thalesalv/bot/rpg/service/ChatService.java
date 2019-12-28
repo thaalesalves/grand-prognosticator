@@ -47,7 +47,7 @@ public class ChatService extends ListenerAdapter {
     @Value("${bot.discord.api.id}")
     private String botId;
 
-    @Value("${bot.discord.operator}")
+    @Value("${bot.discord.message.operator}")
     private String botOperator;
 
     @Override

@@ -1,6 +1,6 @@
 # Propriedades do Spring
 server.port: 8080
-spring.application.name: Grand Prognosticator
+spring.application.name: The Grand Prognosticator
 logging.file: logs/grand-prognosticator.log
 
 # Propriedades do robô
@@ -8,12 +8,12 @@ bot:
   discord:
     volume: 10
     playing: The Elder Scrolls Online
-    operator: "!gp"
     api:
       token: 
       id: 
       secret: 
     message:
+      operator: "!gp"
       footer:
         icon: http://img1.wikia.nocookie.net/__cb20120612190227/elderscrolls/images/f/f7/TESOnlineIcon.png
         text: The Grand Prognosticator. By the Word of Seht, I am bound.

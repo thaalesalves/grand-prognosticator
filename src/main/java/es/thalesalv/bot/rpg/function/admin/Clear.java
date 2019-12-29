@@ -13,11 +13,9 @@ import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
 import es.thalesalv.bot.rpg.function.GenericFunction;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageHistory;
-import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 @Component
@@ -31,8 +29,6 @@ public class Clear implements GenericFunction {
     private MessageHistory history;
     private MessageReceivedEvent event;
     private MessageChannel channel;
-    private User author;
-    private Guild guild;
 
     @Override
     public EmbedBuilder execute(String... strings) throws Exception {
@@ -102,8 +98,6 @@ public class Clear implements GenericFunction {
         builder = grandPrognosticator.buildBuilder(new EmbedBuilder());
         history = new MessageHistory(event.getTextChannel());
         channel = event.getChannel();
-        guild = event.getGuild();
-        author = event.getAuthor();
         this.event = event;
     }
 }

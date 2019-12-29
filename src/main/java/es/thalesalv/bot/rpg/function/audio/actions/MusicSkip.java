@@ -5,10 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
+import es.thalesalv.bot.rpg.bean.PlayerManager;
 import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.function.GenericFunction;
 import es.thalesalv.bot.rpg.util.lavaplayer.GuildMusicManager;
-import es.thalesalv.bot.rpg.util.lavaplayer.PlayerManager;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -29,7 +29,7 @@ public class MusicSkip implements GenericFunction {
     @Override
     public EmbedBuilder execute(String... strings) throws Exception {
         try {
-            musicManager.scheduler.nextTrack();
+            musicManager.getScheduler().nextTrack();
             builder.setDescription("Pela Palavra de Seht, sou compelido. Avançando para próxima canção.");
             return builder;
         } catch (Exception e) {

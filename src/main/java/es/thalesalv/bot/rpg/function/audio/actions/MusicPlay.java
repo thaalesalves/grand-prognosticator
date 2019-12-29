@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
+import es.thalesalv.bot.rpg.bean.PlayerManager;
 import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.function.GenericFunction;
-import es.thalesalv.bot.rpg.util.lavaplayer.PlayerManager;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -85,8 +85,7 @@ public class MusicPlay implements GenericFunction {
             playerManager.init();
             playerManager.loadAndPlay(textChannel, songUrl);
 
-            builder.setDescription("");
-            return builder;
+            return null;
         } catch (Exception e) {
             LOGGER.error("Erro ao tocar música do YouTube: {}", e.getMessage());
             throw new FactotumException("Erro ao tocar música do YouTube:", e);

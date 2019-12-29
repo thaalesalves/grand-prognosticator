@@ -8,13 +8,14 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
-public class TrackScheduler extends AudioEventAdapter {
-    private final AudioPlayer player;
-    private final BlockingQueue<AudioTrack> queue;
+import lombok.Getter;
 
-    public BlockingQueue<AudioTrack> getQueue() {
-        return queue;
-    }
+public class TrackScheduler extends AudioEventAdapter {
+
+    private final AudioPlayer player;
+
+    @Getter
+    private final BlockingQueue<AudioTrack> queue;
 
     public void clearQueue() {
         queue.clear();
@@ -27,7 +28,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public void queue(AudioTrack track) {
         if (!player.startTrack(track, true)) {
-            queue.offer(track);
+            queue.add(track);
         }
     }
 

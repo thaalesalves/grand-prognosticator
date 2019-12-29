@@ -2,12 +2,11 @@ package es.thalesalv.bot.rpg.function.audio.actions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
 import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.function.GenericFunction;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -18,7 +17,7 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AudioManager;
 
-@NoArgsConstructor
+@Component
 @RequiredArgsConstructor
 public class ChannelJoin implements GenericFunction {
 
@@ -33,8 +32,7 @@ public class ChannelJoin implements GenericFunction {
     private String errorMessage;
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelJoin.class);
 
-    @NonNull
-    private GrandPrognosticator grandPrognosticator;
+    private final GrandPrognosticator grandPrognosticator;
 
     private Boolean isAble() {
         VoiceChannel botChannel = bot.getVoiceState().getChannel();

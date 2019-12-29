@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +13,7 @@ import es.thalesalv.bot.rpg.bean.Watson;
 import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.function.GenericFunction;
 import es.thalesalv.bot.rpg.function.text.WatsonMessage;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Guild;
@@ -23,17 +23,15 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 @Service
+@RequiredArgsConstructor
 public class ChatService extends ListenerAdapter {
 
     private Guild guild;
     private static final String CHAT_LOGGER = "[{}] {} disse em {}: {}";
     private static final Logger LOGGER = LoggerFactory.getLogger(ChatService.class);
 
-    @Autowired
-    BeanFactory factory;
-
-    @Autowired
-    private Watson watson;
+    private final BeanFactory factory;
+    private final Watson watson;
 
     @Value("${bot.discord.api.id}")
     private String botId;
@@ -50,21 +48,17 @@ public class ChatService extends ListenerAdapter {
             String rawContent = event.getMessage().getContentRaw();
             EmbedBuilder builder = new EmbedBuilder();
 
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(author.getAsMention()).append(" ")
-                    .append(author.getName()).append(" ")
-                    .append(rawContent.replaceAll("\\p{Punct}", ""));
-
-            String[] commands = stringBuilder.toString().split(" ");
-            User bot = event.getGuild().getMemberById(botId).getUser();
+            String[] commands = rawContent.split(" "); //rawContent.replaceAll("\\p{Punct}", "").split(" ");
+            User bot = guild.getMemberById(botId).getUser();
             Boolean isElegible = event.isFromType(ChannelType.TEXT)
                     && (event.getMessage().getMentionedUsers().contains(bot) || rawContent.split(" ")[0].equals(botOperator));
 
             if (!author.isBot() && isElegible) {
-                LOGGER.info(CHAT_LOGGER, guild.getName(), author.getName(), channel.getName(), rawContent);
+                LOGGER.debug(CHAT_LOGGER, guild.getName(), author.getName(), channel.getName(), rawContent);
                 String watsonReply = watson.sendMessage(rawContent.replaceAll("\n", "    LINE BREAK    ").trim());
                 GenericFunction function;
                 try {
+                    LOGGER.debug("Função {} sendo chamada por {}", watsonReply, author.getName());
                     function = (GenericFunction) factory.getBean(watsonReply);
                     function.setUp(event);
                     builder = function.execute(commands);

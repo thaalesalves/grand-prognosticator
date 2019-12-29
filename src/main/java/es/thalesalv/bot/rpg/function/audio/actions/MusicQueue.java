@@ -8,6 +8,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
 import es.thalesalv.bot.rpg.bean.YouTube;
@@ -16,14 +17,12 @@ import es.thalesalv.bot.rpg.function.GenericFunction;
 import es.thalesalv.bot.rpg.model.YouTubeVideo;
 import es.thalesalv.bot.rpg.util.lavaplayer.GuildMusicManager;
 import es.thalesalv.bot.rpg.util.lavaplayer.PlayerManager;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-@NoArgsConstructor
+@Component
 @RequiredArgsConstructor
 public class MusicQueue implements GenericFunction {
 
@@ -33,11 +32,8 @@ public class MusicQueue implements GenericFunction {
     private GuildMusicManager musicManager;
     private static final Logger LOGGER = LoggerFactory.getLogger(MusicQueue.class);
 
-    @NonNull
-    private GrandPrognosticator grandPrognosticator;
-
-    @NonNull
-    private YouTube youTube;
+    private final GrandPrognosticator grandPrognosticator;
+    private final YouTube youTube;
 
     @Override
     public EmbedBuilder execute(String... strings) throws Exception {

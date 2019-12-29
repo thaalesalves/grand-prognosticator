@@ -14,10 +14,8 @@ import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.model.YouTubeVideo;
-import lombok.NoArgsConstructor;
 
 @Component
-@NoArgsConstructor
 public class YouTube {
 
     private static String API_KEY;

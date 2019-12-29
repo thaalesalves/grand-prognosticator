@@ -5,13 +5,12 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
 import es.thalesalv.bot.rpg.exception.FactotumException;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
@@ -29,7 +28,7 @@ import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 @Service
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class ActivityService extends ListenerAdapter {
 
     private Guild guild;
@@ -39,8 +38,7 @@ public class ActivityService extends ListenerAdapter {
     private User author;
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityService.class);
 
-    @Autowired
-    private GrandPrognosticator grandPrognosticator;
+    private final GrandPrognosticator grandPrognosticator;
 
     @Value("${bot.discord.guild.id}")
     private String guildId;

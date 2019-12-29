@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import es.thalesalv.bot.rpg.exception.FactotumException;
-import lombok.NoArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
@@ -20,7 +19,6 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.managers.AudioManager;
 
 @Configuration
-@NoArgsConstructor
 public class GrandPrognosticator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GrandPrognosticator.class);

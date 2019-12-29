@@ -14,11 +14,14 @@ import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.function.GenericFunction;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 @Component
 @RequiredArgsConstructor
 public class DiceRoll implements GenericFunction {
+
+    private User author;
 
     private final GrandPrognosticator grandPrognosticator;
     private static final Logger LOGGER = LoggerFactory.getLogger(DiceRoll.class);
@@ -26,14 +29,12 @@ public class DiceRoll implements GenericFunction {
     @Override
     public EmbedBuilder execute(String... strings) throws Exception {
         try {
-            String authorMention = strings[0];
-            String authorName = strings[1];
-            String[] dicesToRoll = strings[4].split("d");
+            String[] dicesToRoll = strings[2].split("d");
 
             Integer diceQty = dicesToRoll[0].equals("") ? 1 : Integer.parseInt(dicesToRoll[0]);
             Integer dice = Integer.parseInt(dicesToRoll[1]);
 
-            LOGGER.info("Rolando " + diceQty + "d" + dice + " para " + authorName);
+            LOGGER.info("Rolando " + diceQty + "d" + dice + " para " + author.getName());
 
             List<String> diceList = new ArrayList<String>();
             for (int i = 0; i < diceQty; i++) {
@@ -48,19 +49,20 @@ public class DiceRoll implements GenericFunction {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setTitle("Refletindo... calculando... Pela Palavra de Seht, eu rolo " + diceQty
                     + (diceQty > 1 ? " dados" : " dado") + " de " + dice + " lados.");
-            builder.setDescription(authorMention + ", "
+            builder.setDescription(author.getAsMention() + ", "
                     + (diceQty > 1
                             ? "seus dados são: " + diceRolls + " ("
                                     + diceListInteger.stream().mapToInt(Integer::intValue).sum() + ")"
                             : "seu dado é: " + diceRolls));
             return grandPrognosticator.buildBuilder(builder);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            throw new FactotumException(e);
+            LOGGER.error("Erro ao rolar dados de {}: {}", author.getName(), e.getMessage());
+            throw new FactotumException("Erro ao rolar dados de " + author.getName(), e);
         }
     }
 
     @Override
     public void setUp(MessageReceivedEvent event) throws Exception {
+        author = event.getAuthor();
     }
 }

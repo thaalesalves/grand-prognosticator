@@ -2,20 +2,19 @@ package es.thalesalv.bot.rpg.function.audio.actions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
 import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.function.GenericFunction;
 import es.thalesalv.bot.rpg.util.lavaplayer.GuildMusicManager;
 import es.thalesalv.bot.rpg.util.lavaplayer.PlayerManager;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-@NoArgsConstructor
+@Component
 @RequiredArgsConstructor
 public class MusicStop implements GenericFunction {
 
@@ -25,8 +24,7 @@ public class MusicStop implements GenericFunction {
     private GuildMusicManager musicManager;
     private static final Logger LOGGER = LoggerFactory.getLogger(MusicStop.class);
 
-    @NonNull
-    private GrandPrognosticator grandPrognosticator;
+    private final GrandPrognosticator grandPrognosticator;
 
     @Override
     public EmbedBuilder execute(String... strings) throws Exception {

@@ -20,10 +20,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.exception.FactotumException;
-import lombok.NoArgsConstructor;
 
 @Component
-@NoArgsConstructor
 public class Watson {
 
     private static String API_KEY;

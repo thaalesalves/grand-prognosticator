@@ -10,28 +10,29 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
-import es.thalesalv.bot.rpg.bean.Watson;
 import es.thalesalv.bot.rpg.function.GenericFunction;
-import es.thalesalv.bot.rpg.function.text.WatsonMessage;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageHistory;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 @Component
 @RequiredArgsConstructor
 public class Clear implements GenericFunction {
 
-    private final Watson watson;
     private final GrandPrognosticator grandPrognosticator;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(Clear.class);
+
     private EmbedBuilder builder;
     private MessageHistory history;
     private MessageReceivedEvent event;
     private MessageChannel channel;
+    private User author;
+    private Guild guild;
 
     @Override
     public EmbedBuilder execute(String... strings) throws Exception {
@@ -39,25 +40,22 @@ public class Clear implements GenericFunction {
         int argMsgs;
 
         if ((arg = strings[2]).equals("tudo")) {
-            try {
-                List<Message> msgs;
-                while (true) {
-                    msgs = history.retrievePast(1).complete();
-                    Message msg = msgs.get(0);
-                    LocalDate messageDate = event.getMessage().getCreationTime().toLocalDate();
-                    LocalDate twoWeeksAgo = messageDate.minusWeeks(2);
-                    if (msg.getCreationTime().toLocalDate().isBefore(twoWeeksAgo)) {
-                        break;
-                    }
-                    msg.delete().complete();
+
+            List<Message> msgs;
+            while (true) {
+                msgs = history.retrievePast(1).complete();
+                Message msg = msgs.get(0);
+                LocalDate messageDate = event.getMessage().getCreationTime().toLocalDate();
+                LocalDate twoWeeksAgo = messageDate.minusWeeks(2);
+                if (msg.getCreationTime().toLocalDate().isBefore(twoWeeksAgo)) {
+                    break;
                 }
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage());
+                msg.delete().complete();
             }
 
-            builder.setTitle("Refletindo... calculando... Pela palavra de Seht, eu limpo as mensagens deste canal.");
-            builder.setDescription(
-                    "Limpas todas as mensagens com até duas semanas de idade deste canal. Esta mensagem será apagada em cinco segundos.");
+            builder.setTitle("Refletindo... calculando... limpando as mensagens deste canal.");
+            builder.setDescription("Removidas todas as mensagens "
+                    + "com até duas semanas de idade deste canal. Esta mensagem será apagada em cinco segundos.");
             Message answer = channel.sendMessage(builder.build()).complete();
             new Timer().schedule(new TimerTask() {
                 @Override
@@ -66,7 +64,6 @@ public class Clear implements GenericFunction {
                 }
             }, 5000);
             LOGGER.info("Apagando todas as mensagens.");
-            return null;
         } else if ((argMsgs = Integer.parseInt(arg)) > 0) {
             if (argMsgs <= 100) {
                 try {
@@ -80,8 +77,9 @@ public class Clear implements GenericFunction {
                         msg.delete().complete();
                     }
 
-                    builder.setTitle("Refletindo... calculando... Pela palavra de Seht, eu limpo as mensagens deste canal.");
-                    builder.setDescription("Removidas últimas " + argMsgs + " mensagens. Esta mensagem será apagada em cinco segundos.");
+                    builder.setTitle("Refletindo... calculando... limpando as mensagens deste canal.");
+                    builder.setDescription("Removidas últimas " + argMsgs
+                            + " mensagens. Esta mensagem será apagada em cinco segundos.");
                     Message answer = channel.sendMessage(builder.build()).complete();
                     new Timer().schedule(new TimerTask() {
                         @Override
@@ -92,14 +90,11 @@ public class Clear implements GenericFunction {
                 } catch (Exception e) {
                     LOGGER.error(e.getMessage());
                 }
-                LOGGER.info("Apagando " + argMsgs + " mensagens.");
-                return null;
+                LOGGER.info("Apagando {} mensagens.", argMsgs);
             }
         }
 
-        String watsonReply = watson.sendMessage(strings.toString().replaceAll("\n", "    LINE BREAK    ").trim());
-        WatsonMessage watson = new WatsonMessage();
-        return watson.execute(watsonReply);
+        return null;
     }
 
     @Override
@@ -107,6 +102,8 @@ public class Clear implements GenericFunction {
         builder = grandPrognosticator.buildBuilder(new EmbedBuilder());
         history = new MessageHistory(event.getTextChannel());
         channel = event.getChannel();
+        guild = event.getGuild();
+        author = event.getAuthor();
         this.event = event;
     }
 }

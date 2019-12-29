@@ -12,8 +12,6 @@ import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.function.GenericFunction;
 import es.thalesalv.bot.rpg.util.lavaplayer.GuildMusicManager;
 import es.thalesalv.bot.rpg.util.lavaplayer.PlayerManager;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -26,7 +24,6 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AudioManager;
 
 @Component
-@NoArgsConstructor
 @RequiredArgsConstructor
 public class MusicPlay implements GenericFunction {
 
@@ -40,10 +37,10 @@ public class MusicPlay implements GenericFunction {
     private AudioManager manager;
     private EmbedBuilder builder;
     private String errorMessage;
+    private static final String[] ALLOWED_PROTOCOLS = {"http", "https"};
     private static final Logger LOGGER = LoggerFactory.getLogger(MusicPlay.class);
 
-    @NonNull
-    private GrandPrognosticator grandPrognosticator;
+    private final GrandPrognosticator grandPrognosticator;
 
     @Value("${bot.discord.volume}")
     private String botVolume;
@@ -83,8 +80,7 @@ public class MusicPlay implements GenericFunction {
             PlayerManager playerManager = PlayerManager.getInstance();
             GuildMusicManager musicManager = playerManager.getGuildMusicManager(guild);
             String songUrl = musicCommands[1];
-            UrlValidator urlValidator = new UrlValidator(new String[] { "http", "https" },
-                    UrlValidator.ALLOW_ALL_SCHEMES);
+            UrlValidator urlValidator = new UrlValidator(ALLOWED_PROTOCOLS, UrlValidator.ALLOW_ALL_SCHEMES);
 
             if (!urlValidator.isValid(songUrl)) {
                 builder.setDescription("Pela Palavra de Seht, me foi fornecida uma URL inválida.");

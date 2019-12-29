@@ -32,6 +32,6 @@ HELP.md
 /src/main/resources/application.yml
 .DS_Store
 DS_Store
-log/
+logs/
 *.log
 sheets/

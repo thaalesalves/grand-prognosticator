@@ -12,10 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.exception.FactotumException;
-import lombok.NoArgsConstructor;
 
 @Component
-@NoArgsConstructor
 public class PDFUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PDFUtils.class);

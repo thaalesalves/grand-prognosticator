@@ -4,13 +4,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
 import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.function.GenericFunction;
-import es.thalesalv.bot.rpg.util.lavaplayer.GuildMusicManager;
 import es.thalesalv.bot.rpg.util.lavaplayer.PlayerManager;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -41,9 +39,7 @@ public class MusicPlay implements GenericFunction {
     private static final Logger LOGGER = LoggerFactory.getLogger(MusicPlay.class);
 
     private final GrandPrognosticator grandPrognosticator;
-
-    @Value("${bot.discord.volume}")
-    private String botVolume;
+    private final PlayerManager playerManager;
 
     private Boolean isAble() {
         if (!grandPrognosticator.isUserInVoiceChannel(state)) {
@@ -77,8 +73,6 @@ public class MusicPlay implements GenericFunction {
 
             String[] musicCommands = ArrayUtils.remove(strings, 0);
             musicCommands = ArrayUtils.remove(musicCommands, 0);
-            PlayerManager playerManager = PlayerManager.getInstance();
-            GuildMusicManager musicManager = playerManager.getGuildMusicManager(guild);
             String songUrl = musicCommands[1];
             UrlValidator urlValidator = new UrlValidator(ALLOWED_PROTOCOLS, UrlValidator.ALLOW_ALL_SCHEMES);
 
@@ -88,14 +82,14 @@ public class MusicPlay implements GenericFunction {
             }
 
             grandPrognosticator.joinChannel(manager, channel);
+            playerManager.init();
             playerManager.loadAndPlay(textChannel, songUrl);
-            musicManager.player.setVolume(Integer.parseInt(botVolume));
 
             builder.setDescription("");
             return builder;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            throw new FactotumException(e);
+            LOGGER.error("Erro ao tocar música do YouTube: {}", e.getMessage());
+            throw new FactotumException("Erro ao tocar música do YouTube:", e);
         }
     }
 

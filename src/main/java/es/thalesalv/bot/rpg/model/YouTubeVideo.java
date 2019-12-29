@@ -35,8 +35,8 @@ public class YouTubeVideo {
             Date date = inputFormat.parse(this.publishedAt);
             return outputFormat.format(date);
         } catch (ParseException e) {
-            LOGGER.error(e.getMessage());
-            throw new FactotumException(e);
+            LOGGER.error("Erro ao parsear data de publicação: {}", e.getMessage());
+            throw new FactotumException("Erro ao parsear data de publicação:", e);
         }
     }
 }

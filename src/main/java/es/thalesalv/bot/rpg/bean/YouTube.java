@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.exception.FactotumException;
@@ -18,8 +19,10 @@ import es.thalesalv.bot.rpg.model.YouTubeVideo;
 @Component
 public class YouTube {
 
-    private static String API_KEY;
-    private static String API_URL;
+    @Value("${bot.youtube.apikey}")
+    private String apiKey;
+
+    private static String API_URL = "https://www.googleapis.com/youtube/v3/videos?id=VIDEOID&key=APIKEY&part=PART";
     private static String[] PART = { "snippet", "contentDetails", "statistics", "status" };
     private static final Logger LOGGER = LoggerFactory.getLogger(YouTube.class);
 
@@ -28,7 +31,7 @@ public class YouTube {
             String data = null;
             String videoId = url.split("v=")[1];
             String part = String.join(",", PART);
-            data = lerUrl(API_URL.replace("APIKEY", API_KEY).replace("VIDEOID", videoId).replace("PART", part));
+            data = lerUrl(API_URL.replace("APIKEY", apiKey).replace("VIDEOID", videoId).replace("PART", part));
 
             Gson gson = new Gson();
             RespostaYouTube response = gson.fromJson(data, RespostaYouTube.class);

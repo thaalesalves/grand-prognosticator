@@ -15,44 +15,38 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
 import es.thalesalv.bot.rpg.bean.YouTube;
 import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.model.YouTubeVideo;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
 
+@Component
 @RequiredArgsConstructor
 public class PlayerManager {
 
-    private static PlayerManager INSTANCE;
-    private final AudioPlayerManager playerManager;
-    private final Map<Long, GuildMusicManager> musicManagers;
+    private AudioPlayerManager audioPlayerManager;
+    private Map<Long, GuildMusicManager> musicManagers;
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerManager.class);
 
-    @NonNull
-    private GrandPrognosticator grandPrognosticator;
+    private final YouTube youTube;
+    private final GrandPrognosticator grandPrognosticator;
 
-    @NonNull
-    private YouTube youTube;
-
-    private PlayerManager() {
-        this.musicManagers = new HashMap<>();
-        this.playerManager = new DefaultAudioPlayerManager();
-        AudioSourceManagers.registerRemoteSources(playerManager);
-        AudioSourceManagers.registerLocalSource(playerManager);
-    }
+    @Value("${bot.discord.volume}")
+    private String botVolume;
 
     public synchronized GuildMusicManager getGuildMusicManager(Guild guild) {
         long guildId = guild.getIdLong();
         GuildMusicManager musicManager = musicManagers.get(guildId);
 
         if (musicManager == null) {
-            musicManager = new GuildMusicManager(playerManager);
+            musicManager = new GuildMusicManager(audioPlayerManager);
             musicManagers.put(guildId, musicManager);
         }
 
@@ -64,18 +58,24 @@ public class PlayerManager {
     public void loadAndPlay(TextChannel channel, String trackUrl) throws Exception {
         GuildMusicManager musicManager = getGuildMusicManager(channel.getGuild());
         EmbedBuilder builder = grandPrognosticator.buildBuilder(new EmbedBuilder());
-        YouTubeVideo video = youTube.get(trackUrl);
-        playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
+        audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
                 try {
+                    YouTubeVideo video = youTube.get(trackUrl);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append("**Título:** ").append(video.getTitle())
+                            .append("\n**Canal:** ").append(video.getCreator())
+                            .append("\n**URL:** ").append(video.getUrl())
+                            .append("\n**Visualizações:** ").append(video.getViewCount())
+                            .append("\n**Curtidas:** ").append(video.getLikeCount())
+                            .append("\n**Publicação:** ").append(video.parsePublishedAt());
+
                     builder.setTitle("Refletindo... carregando... Pela Palavra de Seht, adiciono a canção à fila.");
-                    builder.setDescription("**Título:** " + video.getTitle() + "\n**Canal:** " + video.getCreator()
-                            + "\n**URL:** " + video.getUrl() + "\n**Visualizações:** " + video.getViewCount()
-                            + "\n**Curtidas:** " + video.getLikeCount() + "\n**Publicação:** "
-                            + video.parsePublishedAt());
+                    builder.setDescription(stringBuilder.toString());
                     channel.sendMessage(builder.build()).complete();
 
+                    musicManager.player.setVolume(Integer.parseInt(botVolume));
                     play(musicManager, track);
                 } catch (ParseException e) {
                     LOGGER.error(e.getMessage());
@@ -112,11 +112,10 @@ public class PlayerManager {
         musicManager.scheduler.queue(track);
     }
 
-    public static synchronized PlayerManager getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new PlayerManager();
-        }
-
-        return INSTANCE;
+    public void init() {
+        this.musicManagers = new HashMap<>();
+        this.audioPlayerManager = new DefaultAudioPlayerManager();
+        AudioSourceManagers.registerRemoteSources(audioPlayerManager);
+        AudioSourceManagers.registerLocalSource(audioPlayerManager);
     }
 }

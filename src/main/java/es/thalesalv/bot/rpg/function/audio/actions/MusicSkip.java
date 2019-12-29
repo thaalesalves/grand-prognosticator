@@ -20,10 +20,10 @@ public class MusicSkip implements GenericFunction {
 
     private Guild guild;
     private EmbedBuilder builder;
-    private PlayerManager playerManager;
     private GuildMusicManager musicManager;
     private static final Logger LOGGER = LoggerFactory.getLogger(MusicSkip.class);
 
+    private final PlayerManager playerManager;
     private final GrandPrognosticator grandPrognosticator;
 
     @Override
@@ -41,7 +41,6 @@ public class MusicSkip implements GenericFunction {
     @Override
     public void setUp(MessageReceivedEvent event) throws Exception {
         this.guild = event.getGuild();
-        this.playerManager = PlayerManager.getInstance();
         this.musicManager = playerManager.getGuildMusicManager(guild);
         builder = grandPrognosticator.buildBuilder(new EmbedBuilder());
         builder.setTitle("Refletindo... processando... iniciando processos sonoros...");

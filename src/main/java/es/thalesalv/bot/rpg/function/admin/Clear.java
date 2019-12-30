@@ -1,6 +1,7 @@
 package es.thalesalv.bot.rpg.function.admin;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,13 +30,14 @@ public class Clear implements GenericFunction {
     private MessageHistory history;
     private MessageReceivedEvent event;
     private MessageChannel channel;
+    private String[] limpar = { "tudo", "all", "everything" };
 
     @Override
     public EmbedBuilder execute(String... strings) throws Exception {
         String arg;
         int argMsgs;
 
-        if ((arg = strings[2]).equals("tudo")) {
+        if (Arrays.asList(limpar).contains((arg = strings[2]))) {
 
             List<Message> msgs;
             while (true) {

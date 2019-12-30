@@ -17,14 +17,14 @@ import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.model.YouTubeVideo;
 
 @Component
-public class YouTube {
+public class YouTubeVideoApi {
 
     @Value("${bot.youtube.apikey}")
     private String apiKey;
 
-    private static String API_URL = "https://www.googleapis.com/youtube/v3/videos?id=VIDEOID&key=APIKEY&part=PART";
+    private static final String API_URL = "https://www.googleapis.com/youtube/v3/videos?id=VIDEOID&key=APIKEY&part=PART";
     private static String[] PART = { "snippet", "contentDetails", "statistics", "status" };
-    private static final Logger LOGGER = LoggerFactory.getLogger(YouTube.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(YouTubeVideoApi.class);
 
     public YouTubeVideo get(String url) {
         try {
@@ -69,7 +69,6 @@ public class YouTube {
             if (leitor != null)
                 leitor.close();
         }
-
     }
 
     public class RespostaYouTube {

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
 import es.thalesalv.bot.rpg.bean.PlayerManager;
-import es.thalesalv.bot.rpg.bean.YouTube;
+import es.thalesalv.bot.rpg.bean.YouTubeVideoApi;
 import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.function.GenericFunction;
 import es.thalesalv.bot.rpg.model.YouTubeVideo;
@@ -33,7 +33,7 @@ public class MusicQueue implements GenericFunction {
 
     private final PlayerManager playerManager;
     private final GrandPrognosticator grandPrognosticator;
-    private final YouTube youTube;
+    private final YouTubeVideoApi youTube;
 
     @Override
     public EmbedBuilder execute(String... strings) throws Exception {

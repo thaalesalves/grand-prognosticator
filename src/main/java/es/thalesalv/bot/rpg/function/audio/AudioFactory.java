@@ -15,6 +15,7 @@ import es.thalesalv.bot.rpg.function.audio.actions.MusicPlay;
 import es.thalesalv.bot.rpg.function.audio.actions.MusicQueue;
 import es.thalesalv.bot.rpg.function.audio.actions.MusicSkip;
 import es.thalesalv.bot.rpg.function.audio.actions.MusicStop;
+import es.thalesalv.bot.rpg.function.audio.actions.PlaylistPlay;
 import es.thalesalv.bot.rpg.function.text.WatsonMessage;
 import es.thalesalv.bot.rpg.util.lavaplayer.GuildMusicManager;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,12 @@ public class AudioFactory implements GenericFunction {
         String comando = strings[2];
         GenericFunction function;
 
-        if (Arrays.asList(entrar).contains(comando)) {
+        if (Arrays.asList(fila).contains(comando)) {
+            if (strings.length > 3)
+                function = (PlaylistPlay) factory.getBean("playlistPlay");
+            else
+                function = (MusicQueue) factory.getBean("musicQueue");
+        } else if (Arrays.asList(entrar).contains(comando)) {
             function = (ChannelJoin) factory.getBean("channelJoin");
         } else if (Arrays.asList(tocar).contains(comando)) {
             function = (MusicPlay) factory.getBean("musicPlay");
@@ -47,8 +53,6 @@ public class AudioFactory implements GenericFunction {
             function = (MusicSkip) factory.getBean("musicSkip");
         } else if (Arrays.asList(parar).contains(comando)) {
             function = (MusicStop) factory.getBean("musicStop");
-        } else if (Arrays.asList(fila).contains(comando)) {
-            function = (MusicQueue) factory.getBean("musicQueue");
         } else if (Arrays.asList(sair).contains(comando)) {
             function = (ChannelLeave) factory.getBean("channelLeave");
         } else {

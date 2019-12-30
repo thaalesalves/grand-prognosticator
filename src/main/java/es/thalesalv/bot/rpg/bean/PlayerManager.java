@@ -34,7 +34,7 @@ public class PlayerManager {
     private static final String NOT_IMPLEMENTED = "Função ainda não implementada. Não é possível reproduzir playlists.";
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerManager.class);
 
-    private final YouTube youTube;
+    private final YouTubeVideoApi youTube;
     private final GrandPrognosticator grandPrognosticator;
     private final Map<Long, GuildMusicManager> musicManagers;
 
@@ -55,27 +55,29 @@ public class PlayerManager {
         return musicManager;
     }
 
-    public void loadAndPlay(TextChannel channel, String trackUrl) throws Exception {
+    public void loadAndPlay(TextChannel channel, String trackUrl, boolean isPlaylist) throws Exception {
         GuildMusicManager musicManager = getGuildMusicManager(channel.getGuild());
         EmbedBuilder builder = grandPrognosticator.buildBuilder(new EmbedBuilder());
         audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
                 try {
-                    YouTubeVideo video = youTube.get(trackUrl);
-                    StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.append("**Título:** ").append(video.getTitle())
-                            .append("\n**Canal:** ").append(video.getCreator())
-                            .append("\n**URL:** ").append(video.getUrl())
-                            .append("\n**Visualizações:** ").append(video.getViewCount())
-                            .append("\n**Curtidas:** ").append(video.getLikeCount())
-                            .append("\n**Publicação:** ").append(video.parsePublishedAt());
-
-                    builder.setTitle("Refletindo... carregando... Pela Palavra de Seht, adiciono a canção à fila.");
-                    builder.setDescription(stringBuilder.toString());
                     musicManager.getPlayer().setVolume(Integer.parseInt(botVolume));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    if (!isPlaylist) {
+                        YouTubeVideo video = youTube.get(trackUrl);
+                        stringBuilder.append("**Título:** ").append(video.getTitle()).append("\n**Canal:** ")
+                                .append(video.getCreator()).append("\n**URL:** ").append(video.getUrl())
+                                .append("\n**Visualizações:** ").append(video.getViewCount()).append("\n**Curtidas:** ")
+                                .append(video.getLikeCount()).append("\n**Publicação:** ")
+                                .append(video.parsePublishedAt());
+
+                        builder.setTitle("Refletindo... carregando... Pela Palavra de Seht, adiciono a canção à fila.");
+                        builder.setDescription(stringBuilder.toString());
+                        channel.sendMessage(builder.build()).complete();
+                    }
+
                     play(musicManager, track);
-                    channel.sendMessage(builder.build()).complete();
                 } catch (ParseException e) {
                     LOGGER.error(e.getMessage());
                     throw new FactotumException(e);

@@ -5,12 +5,16 @@ O Grand Prognosticator é um bot de Discord inspirado no [personagem de mesmo no
 O Grand Prognosticator é integrado com o IBM Watson para machine-learning. Um dos objetivos deste bot é usá-lo como referência para a lore dos universos de Elder Scrolls e World of Darkness, alimentando-o com informações sobre os mesmos e treinando-o para assimilar contextos para perguntas e respostas.
 
 ## Tecnologias Utilizadas
-* Escrito em Java 8 com Spring Boot;
-* Usando JDA para comunicação com a API do Discord;
-* Usando a API v2 do IBM Watson para comunicação com a inteligência;
-* Usando a API v3 do YouTube para buscar dados de vídeos para músicas;
-* API do LavaPlayer para tocar músicas em canais de voz;
-* E os heróis dos devs Java: Lombok, Apache Commons e Joda Time.
+* Java 8 com Maven;
+* Spring Boot;
+* Java Discord API (JDA);
+* IBM Watson (API v2);
+* YouTube (API v3);
+* LavaPlayer API;
+* Lombok;
+* Apache Commons e Validator;
+* PDFBox API;
+* PostgreSQL;
 
 ## Posso ajudar?
 Claro! Treinar um bot é uma tarefa bem difícil e trabalhosa, e ajuda é bem-vinda. No código inclusive. Caso ache interessante implementar uma função no bot, clone o código, implemente-a e envie através de um pull request. Ou, claro, você pode criar um issue para discutirmos opções. Caso tenha interesse em treinar o bot, me avise para conversarmos sobre como fazê-lo.

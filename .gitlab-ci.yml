@@ -5,6 +5,7 @@ variables:
 
 stages:
   - build
+  - environment
   - staging
   - production
 
@@ -12,6 +13,13 @@ build:
   stage: build
   script:
     - mvn clean install
+
+environment:
+  stage: environment
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
 
 staging:
     type: deploy

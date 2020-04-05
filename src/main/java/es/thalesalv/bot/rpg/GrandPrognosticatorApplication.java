@@ -15,6 +15,7 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
 
 @SpringBootApplication
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
 public class GrandPrognosticatorApplication {
 
     private static String API_TOKEN;

@@ -17,6 +17,7 @@ deploy:
     stage: deploy
     image: ruby:latest
     script:
+        - echo $APPLICATION_PROPERTIES > src/main/resources/application.yml
         - apt-get update -qy
         - apt-get install -y ruby-dev
         - gem install dpl

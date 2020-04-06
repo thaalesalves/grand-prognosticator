@@ -10,7 +10,7 @@ stages:
 build:
   stage: build
   script:
-    - echo $APPLICATION_PROPERTIES > src/main/resources/application.yml
+    - echo $APPLICATION_PROPERTIES > /builds/thaalesalves/grand-prognosticator/src/main/resources/application.yml
     - mvn clean install
 
 deploy:

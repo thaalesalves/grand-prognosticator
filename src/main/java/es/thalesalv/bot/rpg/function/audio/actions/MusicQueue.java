@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import es.thalesalv.bot.rpg.bean.GrandPrognosticator;
 import es.thalesalv.bot.rpg.bean.PlayerManager;
 import es.thalesalv.bot.rpg.bean.YouTubeVideoApi;
-import es.thalesalv.bot.rpg.exception.FactotumException;
 import es.thalesalv.bot.rpg.function.GenericFunction;
 import es.thalesalv.bot.rpg.model.YouTubeVideo;
 import es.thalesalv.bot.rpg.util.lavaplayer.GuildMusicManager;
@@ -38,9 +37,9 @@ public class MusicQueue implements GenericFunction {
     @Override
     public EmbedBuilder execute(String... strings) throws Exception {
         try {
-            List<String> videos = new ArrayList<String>();
+            List<String> videos = new ArrayList<>();
             BlockingQueue<AudioTrack> queue = musicManager.getScheduler().getQueue();
-            if (queue.size() > 0) {
+            if (!queue.isEmpty()) {
                 Integer index = 1;
                 for (AudioTrack track : queue) {
                     YouTubeVideo video = youTube.get(track.getInfo().uri);
@@ -54,11 +53,12 @@ public class MusicQueue implements GenericFunction {
             }
 
             builder.setTitle("Refletindo... processando... listando fila musical");
-            return builder;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            throw new FactotumException(e);
+            LOGGER.error("Erro ao listar fila musical -> {}", e.getMessage());
+            builder.setDescription("Pela Palavra de Seht, houve um erro ao listar a fila musical.");
         }
+
+        return builder;
     }
 
     @Override
@@ -66,6 +66,5 @@ public class MusicQueue implements GenericFunction {
         this.guild = event.getGuild();
         this.musicManager = playerManager.getGuildMusicManager(guild);
         builder = grandPrognosticator.buildBuilder(new EmbedBuilder());
-        builder.setTitle("Refletindo... processando... iniciando processos sonoros...");
     }
 }

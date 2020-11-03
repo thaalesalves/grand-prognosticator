@@ -34,13 +34,13 @@ public class ChannelLeave implements GenericFunction {
 
     @Override
     public EmbedBuilder execute(String... strings) throws Exception {
+        LOGGER.debug("Erro ao sair de canal -> {}", channel.getName());
         try {
             builder.setDescription("Pela Palavra de Seht, sou compelido. Saindo de #" + channel.getName());
             grandPrognosticator.leaveChannel(manager);
             return builder;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            throw new FactotumException(e);
+            throw new FactotumException("Erro ao sair de canal -> " + channel.getName(), e);
         }
     }
 

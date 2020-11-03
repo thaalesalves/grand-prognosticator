@@ -36,62 +36,46 @@ public class Clear implements GenericFunction {
     public EmbedBuilder execute(String... strings) throws Exception {
         String arg;
         int argMsgs;
-
-        if (Arrays.asList(limpar).contains((arg = strings[2]))) {
-
-            List<Message> msgs;
-            while (true) {
-                msgs = history.retrievePast(1).complete();
-                Message msg = msgs.get(0);
-                LocalDate messageDate = event.getMessage().getCreationTime().toLocalDate();
-                LocalDate twoWeeksAgo = messageDate.minusWeeks(2);
-                if (msg.getCreationTime().toLocalDate().isBefore(twoWeeksAgo)) {
-                    break;
-                }
-                msg.delete().complete();
-            }
-
-            builder.setTitle("Refletindo... calculando... limpando as mensagens deste canal.");
-            builder.setDescription("Removidas todas as mensagens "
-                    + "com até duas semanas de idade deste canal. Esta mensagem será apagada em cinco segundos.");
-            Message answer = channel.sendMessage(builder.build()).complete();
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    answer.delete().complete();
-                }
-            }, 5000);
-            LOGGER.info("Apagando todas as mensagens.");
-        } else if ((argMsgs = Integer.parseInt(arg)) > 0) {
-            if (argMsgs <= 100) {
-                try {
-                    List<Message> msgs = history.retrievePast(argMsgs + 1).complete();
-                    for (Message msg : msgs) {
-                        LocalDate messageDate = event.getMessage().getCreationTime().toLocalDate();
-                        LocalDate twoWeeksAgo = messageDate.minusWeeks(2);
-                        if (msg.getCreationTime().toLocalDate().isBefore(twoWeeksAgo)) {
-                            break;
-                        }
-                        msg.delete().complete();
+        try {
+            if (Arrays.asList(limpar).contains((arg = strings[2]))) {
+                List<Message> msgs;
+                while (true) {
+                    msgs = history.retrievePast(1).complete();
+                    Message msg = msgs.get(0);
+                    LocalDate messageDate = event.getMessage().getCreationTime().toLocalDate();
+                    LocalDate twoWeeksAgo = messageDate.minusWeeks(2);
+                    if (msg.getCreationTime().toLocalDate().isBefore(twoWeeksAgo)) {
+                        break;
                     }
-
-                    builder.setTitle("Refletindo... calculando... limpando as mensagens deste canal.");
-                    builder.setDescription("Removidas últimas " + argMsgs
-                            + " mensagens. Esta mensagem será apagada em cinco segundos.");
-                    Message answer = channel.sendMessage(builder.build()).complete();
-                    new Timer().schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            answer.delete().complete();
-                        }
-                    }, 5000);
-                } catch (Exception e) {
-                    LOGGER.error(e.getMessage());
+                    msg.delete().complete();
                 }
+
+                builder.setDescription("Removidas todas as mensagens "
+                        + "com até duas semanas de idade deste canal. Esta mensagem será apagada em cinco segundos.");
+                Message answer = channel.sendMessage(builder.build()).complete();
+                this.deleteMessageMillisecond(answer, 5000);
+                LOGGER.info("Apagando todas as mensagens.");
+            } else if ((argMsgs = Integer.parseInt(arg)) > 0 && argMsgs <= 100) {
+                List<Message> msgs = history.retrievePast(argMsgs + 1).complete();
+                for (Message msg : msgs) {
+                    LocalDate messageDate = event.getMessage().getCreationTime().toLocalDate();
+                    LocalDate twoWeeksAgo = messageDate.minusWeeks(2);
+                    if (msg.getCreationTime().toLocalDate().isBefore(twoWeeksAgo)) {
+                        break;
+                    }
+                    msg.delete().complete();
+                }
+
+                builder.setDescription(
+                        "Removidas últimas " + argMsgs + " mensagens com até duas semanas de idade deste canal. Esta mensagem será apagada em cinco segundos.");
+                Message answer = channel.sendMessage(builder.build()).complete();
+                this.deleteMessageMillisecond(answer, 5000);
                 LOGGER.info("Apagando {} mensagens.", argMsgs);
             }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            channel.sendMessage("Refletindo... diagnosticando... erro ao apagar mensagens deste canal.").complete();
         }
-
         return null;
     }
 
@@ -101,5 +85,16 @@ public class Clear implements GenericFunction {
         history = new MessageHistory(event.getTextChannel());
         channel = event.getChannel();
         this.event = event;
+
+        builder.setTitle("Refletindo... calculando... limpando as mensagens deste canal.");
+    }
+
+    private void deleteMessageMillisecond(Message answer, long time) {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                answer.delete().complete();
+            }
+        }, time);
     }
 }

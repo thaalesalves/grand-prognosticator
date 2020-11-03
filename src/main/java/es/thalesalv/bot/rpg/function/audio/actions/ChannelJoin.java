@@ -60,6 +60,7 @@ public class ChannelJoin implements GenericFunction {
     @Override
     public EmbedBuilder execute(String... strings) throws Exception {
         try {
+            LOGGER.debug("Entrando em canal -> {}", channel.getName());
             if (!isAble()) {
                 builder.setDescription(errorMessage);
                 return builder;
@@ -69,8 +70,7 @@ public class ChannelJoin implements GenericFunction {
             grandPrognosticator.joinChannel(manager, channel);
             return builder;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            throw new FactotumException(e);
+            throw new FactotumException("Erro ao entrar em canal -> " + channel.getName(), e);
         }
     }
 

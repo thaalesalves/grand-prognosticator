@@ -1,0 +1,32 @@
+# Propriedades do Spring
+server.port: ${PORT:8080}
+spring.application.name: The Grand Prognosticator
+logging.file: logs/grand-prognosticator.log
+
+# Propriedades do robô
+bot:
+  discord:
+    volume: ${GRAND_PROGNOSTICATOR_VOLUME}
+    playing: ${GRAND_PROGNOSTICATOR_PLAYING}
+    api:
+      token: ${GRAND_PROGNOSTICATOR_DISCORD_TOKEN}
+      id: ${GRAND_PROGNOSTICATOR_DISCORD_ID}
+      secret: ${GRAND_PROGNOSTICATOR_DISCORD_SECRET}
+    message:
+      operator: ${GRAND_PROGNOSTICATOR_OPERATOR}
+      footer:
+        icon: http://img1.wikia.nocookie.net/__cb20120612190227/elderscrolls/images/f/f7/TESOnlineIcon.png
+        text: The Grand Prognosticator. By the Word of Seht, I am bound.
+    guild:
+      id: ${GRAND_PROGNOSTICATOR_GUILD_ID}
+      channel:
+        log: ${GRAND_PROGNOSTICATOR_LOG_CHANNEL}
+        general: ${GRAND_PROGNOSTICATOR_GENRAL_CHANNEL}
+        campaign: ${GRAND_PROGNOSTICATOR_CAMPAIGN_CHANNEL}
+  rpg.sheet.dir:
+    save: '@project.build.directory@/sheets/save'
+    load: '@project.build.directory@/sheets/load'
+  watson:
+    apikey: ${GRAND_PROGNOSTICATOR_WATSON_API_KEY}
+    assistantid: ${GRAND_PROGNOSTICATOR_WATSON_ASSISTANT_ID}
+  youtube.apikey: ${GRAND_PROGNOSTICATOR_YOUTUBE_API_KEY}

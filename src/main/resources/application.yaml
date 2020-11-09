@@ -1,5 +1,4 @@
 # Propriedades do Spring
-server.port: ${PORT:8080}
 spring.application.name: The Grand Prognosticator
 logging.file: logs/grand-prognosticator.log
 

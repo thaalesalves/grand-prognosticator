@@ -1,6 +1,9 @@
 # Propriedades do Spring
 spring.application.name: The Grand Prognosticator
 logging.file: logs/grand-prognosticator.log
+server:
+  port: ${PORT:8080}
+  address: ${HOST:localhost}
 
 # Propriedades do robô
 bot:
